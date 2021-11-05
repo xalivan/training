@@ -2,13 +2,11 @@ package com.example.training.service;
 
 import com.example.training.model.User;
 import com.example.training.repository.UserRepository;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -18,7 +16,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User getById(Integer id) throws NotFoundException {
+    public Optional<User> getById(Integer id) {
         log.info("UserServiceImpl.getById." + "id=" + id + " This  User id is found");
         return findById(id);
     }
@@ -26,7 +24,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         log.info("UserServiceImpl.saveUser." + user.toString() + " created");
-//        User userUpdate = findById(id);
         user.setFirstName(user.getFirstName());
         user.setLastName(user.getLastName());
         return userRepository.save(user);
@@ -34,28 +31,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        log.info("UserServiceImpl.getAllUser." );
+        log.info("UserServiceImpl.getAllUser.");
         return userRepository.findAll();
     }
 
-//    @Override
-//    public User update(Integer id, User user) {
-//        log.info("UserServiceImpl.updateUser." + "id=" + id + "user=" + user + " User is update");
-//        User userUpdate = findById(id);
-//        user.setFirstName(user.getFirstName());
-//        user.setLastName(user.getLastName());
-//        return userRepository.save(userUpdate);
-//    }
-
     @Override
-    public void delete(Integer id) throws NotFoundException {
-        log.info("UserServiceImpl.deleteUser." + userRepository.getById(id) + ". User is deleted");
-        userRepository.delete(findById(id));
+    public boolean delete(Integer id) {
+        log.info("UserServiceImpl.delete. User with id= " + id + "deleted");
+        return userRepository.deleteUserById(id) > 0;
     }
 
-
-    private User findById(Integer id) throws NotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not exist with id= " + id));
+    private Optional<User> findById(Integer id) {
+        return userRepository.findById(id);
     }
 
 }

@@ -5,13 +5,13 @@ import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface UserService {
 
-    User getById(Integer id) throws NotFoundException;
+    Optional<User> getById(Integer id) ;
     User save(User user);
     List<User> getAll();
-//    User update(Integer id, User user);
-    void delete(Integer id) throws NotFoundException;
+    boolean delete(Integer id) ;
 }
