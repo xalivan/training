@@ -6,9 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
+
 
 
 @RestController
@@ -18,8 +17,8 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<Integer>> getUserById(@PathVariable Integer id) {
-        return ResponseEntity.ok(userService.getById(id).map(User::getId));
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+        return userService.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
 
     @PutMapping("{id}")
@@ -33,8 +32,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id) {
-        userService.delete(id);
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        return userService.delete(id) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 }
