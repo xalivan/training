@@ -18,46 +18,43 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User getById(Integer id) {
+    public User getById(Integer id) throws NotFoundException {
         log.info("UserServiceImpl.getById." + "id=" + id + " This  User id is found");
-
         return findById(id);
     }
 
     @Override
-    public void save(User user) {
+    public User save(User user) {
         log.info("UserServiceImpl.saveUser." + user.toString() + " created");
-
-        userRepository.save(user);
+//        User userUpdate = findById(id);
+        user.setFirstName(user.getFirstName());
+        user.setLastName(user.getLastName());
+        return userRepository.save(user);
     }
 
     @Override
     public List<User> getAll() {
         log.info("UserServiceImpl.getAllUser." );
-
         return userRepository.findAll();
     }
 
-    @Override
-    public User update(Integer id, User user) {
-        log.info("UserServiceImpl.updateUser." + "id=" + id + "user=" + user + " User is update");
-
-        User userUpdate = findById(id);
-        user.setFirstName(user.getFirstName());
-        user.setLastName(user.getLastName());
-
-        return userRepository.save(userUpdate);
-    }
+//    @Override
+//    public User update(Integer id, User user) {
+//        log.info("UserServiceImpl.updateUser." + "id=" + id + "user=" + user + " User is update");
+//        User userUpdate = findById(id);
+//        user.setFirstName(user.getFirstName());
+//        user.setLastName(user.getLastName());
+//        return userRepository.save(userUpdate);
+//    }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id) throws NotFoundException {
         log.info("UserServiceImpl.deleteUser." + userRepository.getById(id) + ". User is deleted");
-
         userRepository.delete(findById(id));
     }
 
-    @SneakyThrows
-    private User findById(Integer id) {
+
+    private User findById(Integer id) throws NotFoundException {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not exist with id= " + id));
     }
 
