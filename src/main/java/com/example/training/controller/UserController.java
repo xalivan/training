@@ -3,6 +3,7 @@ package com.example.training.controller;
 import com.example.training.model.User;
 import com.example.training.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,19 +18,13 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<User>> getUserById(@PathVariable Integer id) {
-        Optional<User> userOptional = userService.getById(id);
-        if (userOptional.isPresent()) {
-            return ResponseEntity.ok(userOptional);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Optional<Integer>> getUserById(@PathVariable Integer id) {
+        return ResponseEntity.ok(userService.getById(id).map(User::getId));
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Integer> put(@RequestBody User inputUser) {
-        User save = userService.save(inputUser);
-        return ResponseEntity.ok(save.getId());
+        return ResponseEntity.ok(userService.put(inputUser).getId());
     }
 
     @GetMapping
@@ -38,7 +33,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id) {
         userService.delete(id);
         return ResponseEntity.notFound().build();
     }

@@ -16,16 +16,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public Optional<User> getById(Integer id) {
+    public Optional<User> getById(int id) {
         log.info("UserServiceImpl.getById." + "id=" + id + " This  User id is found");
         return findById(id);
     }
 
     @Override
-    public User save(User user) {
+    public User put(User user) {
         log.info("UserServiceImpl.saveUser." + user.toString() + " created");
-        user.setFirstName(user.getFirstName());
-        user.setLastName(user.getLastName());
         return userRepository.save(user);
     }
 
@@ -36,12 +34,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(int id) {
         log.info("UserServiceImpl.delete. User with id= " + id + "deleted");
         return userRepository.deleteUserById(id) > 0;
     }
 
-    private Optional<User> findById(Integer id) {
+    private Optional<User> findById(int id) {
         return userRepository.findById(id);
     }
 
