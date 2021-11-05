@@ -4,7 +4,6 @@ import com.example.training.model.User;
 import com.example.training.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,13 +20,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getById(int id) {
         log.info("UserServiceImpl.getById." + "id=" + id + " This  User id is found");
-        return findById(id);
+        return userRepository.findById(id);
     }
 
     @Override
-    public User put(User user) {
+    public int put(User user) {
         log.info("UserServiceImpl.saveUser." + user.toString() + " created");
-        return userRepository.save(user);
+        return userRepository.save(user).getId();
     }
 
     @Override
@@ -41,10 +40,6 @@ public class UserServiceImpl implements UserService {
     public boolean delete(int id) {
         log.info("UserServiceImpl.delete. User with id= " + id + "deleted");
         return userRepository.deleteUserById(id) > 0;
-    }
-
-    private Optional<User> findById(int id) {
-        return userRepository.findById(id);
     }
 
 }

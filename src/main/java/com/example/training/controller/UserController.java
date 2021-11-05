@@ -3,11 +3,9 @@ package com.example.training.controller;
 import com.example.training.model.User;
 import com.example.training.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
 
 
 @RestController
@@ -23,7 +21,7 @@ public class UserController {
 
     @PutMapping("{id}")
     public ResponseEntity<Integer> put(@RequestBody User inputUser) {
-        return ResponseEntity.ok(userService.put(inputUser).getId());
+        return ResponseEntity.ok(userService.put(inputUser));
     }
 
     @GetMapping
@@ -32,7 +30,8 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         return userService.delete(id) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
+
 }
