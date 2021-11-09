@@ -1,7 +1,6 @@
 package com.example.training.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.example.training.repository.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,22 +8,27 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.dao.*;
 import org.springframework.security.config.annotation.authentication.builders.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements UserDetailsService {
 
-    private final UserDetailsService userDetailsService;
+    private final UserRepository usersRepository;
 
-    @Autowired
-    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(UserRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String originalLastName) throws UsernameNotFoundException {
+        return new UserDetailsImpl(usersRepository.findOneByLastName(originalLastName).orElseThrow(IllegalArgumentException::new));
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,14 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/users/admin/**").hasAuthority("ADMIN")
+                .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
-                .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/");
@@ -59,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(this::loadUserByUsername);
         return daoAuthenticationProvider;
     }
 }

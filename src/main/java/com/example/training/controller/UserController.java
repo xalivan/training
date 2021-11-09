@@ -5,6 +5,7 @@ import com.example.training.security.UserDetailsImpl;
 import com.example.training.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/users/")
 @RequiredArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
@@ -24,28 +25,13 @@ public class UserController {
         return userService.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("/success")
-    public String getSuccessPage(Authentication authentication, Model model) {
-        UserDetailsImpl details = (UserDetailsImpl) authentication.getPrincipal();
-        String userRole = details.getAuthorities().toString();
-        if (userRole.equals("[ADMIN]")) {
-            return "HI ADMIN";
-        }
-        if (userRole.equals("[USER]")) {
-            return "Hi USER";
-        } else {
-            return "redirect:/";
-        }
-    }
-
     @PutMapping("{id}")
     public ResponseEntity<Integer> put(@RequestBody User inputUser) {
         return ResponseEntity.ok(userService.put(inputUser));
     }
 
-    @GetMapping
-    public List<User> getAll() {
-
+    @GetMapping("admin")
+    public List<User> getAllAdmin() {
         return userService.getAll();
     }
 
