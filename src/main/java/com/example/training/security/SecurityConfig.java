@@ -1,6 +1,8 @@
 package com.example.training.security;
 
+import com.example.training.model.Role;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/admin").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/users").hasAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
