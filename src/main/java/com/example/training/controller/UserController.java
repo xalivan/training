@@ -1,32 +1,35 @@
 package com.example.training.controller;
 
-import com.example.training.model.User;
+import com.example.training.model.UserEntity;
 import com.example.training.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
 
     @GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<UserEntity> getUserById(@PathVariable Integer id) {
         return userService.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Integer> put(@RequestBody User inputUser) {
-        return ResponseEntity.ok(userService.put(inputUser));
+    @PutMapping
+    public ResponseEntity<Integer> put(@RequestBody UserEntity userEntity) {
+        return ResponseEntity.ok(userService.put(userEntity));
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return userService.getAll();
+    public List<UserEntity> getAll() {
+          return userService.getAll();
     }
 
     @DeleteMapping("{id}")

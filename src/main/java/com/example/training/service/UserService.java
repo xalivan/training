@@ -1,17 +1,17 @@
 package com.example.training.service;
 
-import com.example.training.model.User;
+import com.example.training.model.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
 
-    Optional<User> getById(int id);
+    Optional<UserEntity> getById(int id);
 
-    int put(User user);
+    int put(UserEntity userEntity);
 
-    List<User> getAll();
+    List<UserEntity> getAll();
 
     boolean delete(int id);
 }
