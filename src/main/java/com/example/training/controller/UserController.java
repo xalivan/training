@@ -23,12 +23,12 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<Integer> put(@RequestBody UserEntity inputUserEntity) {
-        return ResponseEntity.ok(userService.put(inputUserEntity));
+    public ResponseEntity<Integer> put(@RequestBody UserEntity userEntity) {
+        return ResponseEntity.ok(userService.put(userEntity));
     }
 
-    @GetMapping()
-    public List<UserEntity> getAllAdmin() {
+    @GetMapping
+    public List<UserEntity> getAll() {
           return userService.getAll();
     }
 
