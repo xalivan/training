@@ -1,6 +1,6 @@
 package com.example.training.service;
 
-import com.example.training.model.User;
+import com.example.training.model.UserOriginal;
 import com.example.training.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,19 +18,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public Optional<User> getById(int id) {
+    public Optional<UserOriginal> getById(int id) {
         log.info("UserServiceImpl.getById." + "id=" + id + " This  User id is found");
         return userRepository.findById(id);
     }
 
     @Override
-    public int put(User user) {
-        log.info("UserServiceImpl.saveUser." + user.toString() + " created");
-        return userRepository.save(user).getId();
+    public int put(UserOriginal userOriginal) {
+        log.info("UserServiceImpl.saveUser." + userOriginal.toString() + " created");
+        return userRepository.save(userOriginal).getId();
     }
 
     @Override
-    public List<User> getAll() {
+    public List<UserOriginal> getAll() {
         log.info("UserServiceImpl.getAllUser.");
         return userRepository.findAll();
     }
