@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int put(UserEntity userEntity) {
         log.info("UserServiceImpl.saveUser." + userEntity.toString() + " created");
-        return userRepository.save(userEntity).getId();
+
+        return userRepository.findOneByLastName(userEntity.getLastName())
+                .map(userEntity1 -> userRepository.update(userEntity))
+                .orElseGet(() -> userRepository.insert(userEntity));
     }
 
     @Override
@@ -35,11 +37,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    @Transactional
     @Override
     public boolean delete(int id) {
         log.info("UserServiceImpl.delete. User with id= " + id + "deleted");
-        return userRepository.deleteUserById(id) > 0;
+        return userRepository.delete(id) > 0;
     }
 
 }
