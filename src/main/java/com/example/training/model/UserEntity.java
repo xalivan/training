@@ -1,26 +1,13 @@
 package com.example.training.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.*;
-
-@Getter
-@Setter
-@EqualsAndHashCode
-@NoArgsConstructor
-@Entity
-@Table(name = "users")
+@Value
 public class UserEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String firstName;
-    private String lastName;
-    private String password;
-    private Role role;
+    int id;
+    String firstName;
+    String lastName;
+    String password;
+    Role role;
 
 }
