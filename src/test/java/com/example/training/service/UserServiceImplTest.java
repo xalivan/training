@@ -1,75 +1,59 @@
 package com.example.training.service;
 
-import com.example.training.model.Role;
 import com.example.training.model.UserEntity;
 import com.example.training.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.training.model.Role.ADMIN;
+import static com.example.training.model.Role.USER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class UserServiceImplTest {
 
-    private final UserRepository userDao = mock(UserRepository.class);
-    private final UserService service = new UserServiceImpl(userDao);
+    private final UserRepository repository = mock(UserRepository.class);
+    private final UserService service = new UserServiceImpl(repository);
 
-    UserEntity userFirst = new UserEntity(1, "Name-1", "LastName-1", "$2a$12$sO4f2lJ9Yh8sBhIDGU3YTOswBgK23yAd1uOHnkJQ1n4AN0U.D4KsO", Role.USER);
-    UserEntity userSecond = new UserEntity(2, "Name-2", "LastName-2", "$2a$12$sO4f2lJ9Yh8sBhIDGU3YTOswBgK23yAd1uOHnkJQ1n4AN0U.D4KsO", Role.ADMIN);
-    UserEntity userThree = new UserEntity(3, "Name-3", "LastName-3", "$2a$12$sO4f2lJ9Yh8sBhIDGU3YTOswBgK23yAd1uOHnkJQ1n4AN0U.D4KsO", Role.USER);
-    UserEntity userThreeUpdate = new UserEntity(3, "Name-4", "LastName-3", "$2a$12$sO4f2lJ9Yh8sBhIDGU3YTOswBgK23yAd1uOHnkJQ1n4AN0U.D4Ks4", Role.ADMIN);
+    String PASSWORD = RandomStringUtils.randomAlphanumeric(50);
 
-    @BeforeEach
-    public void setUp() {
-        userDao.delete(1);
-        userDao.delete(2);
-        userDao.delete(3);
-        userDao.insert(userFirst);
-        userDao.insert(userSecond);
-    }
+    UserEntity userFirst = new UserEntity(1, RandomStringUtils.randomAlphanumeric(5), RandomStringUtils.randomAlphanumeric(5), PASSWORD, ADMIN);
+    UserEntity userSecond = new UserEntity(2, RandomStringUtils.randomAlphanumeric(5), RandomStringUtils.randomAlphanumeric(5), PASSWORD, USER);
 
     @Test
     void getById() {
-        when(service.getById(3)).thenReturn(java.util.Optional.of(new UserEntity(3, "Name-3", "LastName-3", "$2a$12$sO4f2lJ9Yh8sBhIDGU3YTOswBgK23yAd1uOHnkJQ1n4AN0U.D4KsO", Role.USER)));
-        Optional<UserEntity> user = service.getById(3);
-        assertThat("Name-3", is(user.get().getFirstName()));
-        assertThat("LastName-3", is(user.get().getLastName()));
-        assertThat("$2a$12$sO4f2lJ9Yh8sBhIDGU3YTOswBgK23yAd1uOHnkJQ1n4AN0U.D4KsO", is(user.get().getPassword()));
-        assertThat(Role.USER, is(user.get().getRole()));
+        when(repository.findById(1)).thenReturn(Optional.of(userFirst));
+        assertThat(Optional.of(userFirst), is(service.getById(1)));
     }
 
     @Test
-    void creat() {
-        service.put(userThree);
-        when(service.getAll()).thenReturn(List.of(userFirst, userSecond, userThree));
-        assertThat(List.of(userFirst, userSecond, userThree), is(service.getAll()));
+    void putCreat() {
+        when(repository.findOneByLastName(userFirst.getLastName())).thenReturn(Optional.empty());
+        when(repository.insert(userFirst)).thenReturn(1);
+        assertThat(1, is(service.put(userFirst)));
     }
 
     @Test
-    void update() {
-        service.put(userThree);
-        service.put(userThreeUpdate);
-        when(service.getAll()).thenReturn(List.of(userFirst, userSecond, userThreeUpdate));
-        assertThat(List.of(userFirst, userSecond, userThreeUpdate), is(service.getAll()));
+    void putUpdate() {
+        when(repository.findOneByLastName(userFirst.getLastName())).thenReturn(Optional.of(userFirst));
+        when(repository.update(userFirst)).thenReturn(1);
+        assertThat(1, is(service.put(userFirst)));
     }
-
 
     @Test
     void getAll() {
-        when(service.getAll()).thenReturn(List.of(userFirst, userSecond));
+        when(repository.findAll()).thenReturn(List.of(userFirst, userSecond));
         assertThat(List.of(userFirst, userSecond), is(service.getAll()));
     }
 
     @Test
     void delete() {
-        service.delete(2);
-        when(service.getAll()).thenReturn(List.of(userFirst));
-        assertThat(List.of(userFirst), is(service.getAll()));
+        when(repository.delete(1)).thenReturn(1);
+        assertThat(true, is(service.delete(1)));
     }
 }
