@@ -37,7 +37,6 @@ build/
 mvnw
 mvnw.cmd
 #**/test
-TrainingApplicationTests.java
 
 #README.m
 #README.md

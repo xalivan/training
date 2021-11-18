@@ -12,15 +12,15 @@ import static java.util.UUID.randomUUID;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserEntityGenerator {
-     final static Random GENERATOR = new Random();
+     final static Random RANDOM = new Random();
 
     private static Role getRole(){
         Role[] roles = Role.values();
-        return roles[GENERATOR.nextInt(roles.length)];
+        return roles[RANDOM.nextInt(roles.length)];
     }
 
     public static UserEntity generateUser() {
-        return new UserEntity(GENERATOR.nextInt(1000), UUID.randomUUID().toString(), UUID.randomUUID().toString(), randomUUID().toString(), getRole());
+        return new UserEntity(RANDOM.nextInt(1000), UUID.randomUUID().toString(), UUID.randomUUID().toString(), randomUUID().toString(), getRole());
     }
 
 }
