@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
         log.info("UserServiceImpl.saveUser." + userEntity.toString() + " created");
 
         return userRepository.findOneByLastName(userEntity.getLastName())
-                .map(userEntity1 -> userRepository.update(userEntity))
+                .map(userRepository::update)
                 .orElseGet(() -> userRepository.insert(userEntity));
     }
 

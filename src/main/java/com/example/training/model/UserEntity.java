@@ -9,5 +9,4 @@ public class UserEntity {
     String lastName;
     String password;
     Role role;
-
 }
