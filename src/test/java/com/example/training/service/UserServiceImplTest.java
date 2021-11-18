@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.training.utils.UserEntityGenerator.generatorUser;
+import static com.example.training.utils.UserEntityGenerator.generateUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
@@ -21,14 +21,14 @@ class UserServiceImplTest {
 
     @Test
     void getById() {
-        UserEntity userEntity = generatorUser();
+        UserEntity userEntity = generateUser();
         when(repository.findById(1)).thenReturn(Optional.of(userEntity));
         assertThat(service.getById(1).get(), is(userEntity));
     }
 
     @Test
     void putCreat() {
-        UserEntity userEntity = generatorUser();
+        UserEntity userEntity = generateUser();
         when(repository.findOneByLastName(userEntity.getLastName())).thenReturn(Optional.empty());
         when(repository.insert(userEntity)).thenReturn(1);
         assertThat(service.put(userEntity), is(1));
@@ -36,7 +36,7 @@ class UserServiceImplTest {
 
     @Test
     void putUpdate() {
-        UserEntity userEntity = generatorUser();
+        UserEntity userEntity = generateUser();
         when(repository.findOneByLastName(userEntity.getLastName())).thenReturn(Optional.of(userEntity));
         when(repository.update(userEntity)).thenReturn(1);
         assertThat(service.put(userEntity), is(1));
@@ -44,10 +44,10 @@ class UserServiceImplTest {
 
     @Test
     void getAll() {
-        UserEntity userEntity_1 = generatorUser();
-        UserEntity userEntity_2 = generatorUser();
-        when(repository.findAll()).thenReturn(List.of(userEntity_1, userEntity_2));
-        assertThat(service.getAll(), containsInAnyOrder(userEntity_1, userEntity_2));
+        UserEntity userEntity1 = generateUser();
+        UserEntity userEntity2 = generateUser();
+        when(repository.findAll()).thenReturn(List.of(userEntity1, userEntity2));
+        assertThat(service.getAll(), containsInAnyOrder(userEntity1, userEntity2));
     }
 
     @Test
