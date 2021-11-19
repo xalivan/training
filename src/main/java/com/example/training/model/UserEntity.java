@@ -13,7 +13,11 @@ public class UserEntity {
     Role role;
 
     @JsonCreator
-    public UserEntity(@JsonProperty("id") int id, @JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName, @JsonProperty("password") String password, @JsonProperty("role") Role role) {
+    public UserEntity(@JsonProperty("id") int id,
+                      @JsonProperty("firstName") String firstName,
+                      @JsonProperty("lastName") String lastName,
+                      @JsonProperty("password") String password,
+                      @JsonProperty("role") Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

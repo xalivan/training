@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import static com.example.training.utils.UserEntityGenerator.generateUser;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
@@ -47,7 +49,7 @@ class UserServiceImplTest {
         UserEntity userEntity1 = generateUser();
         UserEntity userEntity2 = generateUser();
         when(repository.findAll()).thenReturn(List.of(userEntity1, userEntity2));
-        assertThat(service.getAll(), containsInAnyOrder(userEntity1, userEntity2));
+        assertThat(service.getAll(), containsInAnyOrder(equalTo(userEntity1) , equalTo(userEntity2)));
     }
 
     @Test
