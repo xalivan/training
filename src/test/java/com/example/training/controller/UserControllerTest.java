@@ -62,10 +62,10 @@ class UserControllerTest {
         UserEntity userEntity = generateUser();
         when(service.put(userEntity)).thenReturn(1);
 
-        String userUsString = mapper.writeValueAsString(userEntity);
+        String userAsString = mapper.writeValueAsString(userEntity);
         MockHttpServletResponse response = mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(userUsString))
+                        .content(userAsString))
                 .andReturn()
                 .getResponse();
 
@@ -87,7 +87,6 @@ class UserControllerTest {
 
         assertThat(Arrays.asList(actual), containsInAnyOrder(userEntity1, userEntity2));
         assertThat(response.getStatus(), is(HttpStatus.OK.value()));
-        assertThat(actual.length, is(2));
     }
 
     @Test
