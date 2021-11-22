@@ -11,12 +11,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static com.example.training.utils.UserEntityGenerator.generateUser;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
@@ -40,9 +40,9 @@ class UserControllerTest {
                 .andReturn()
                 .getResponse();
 
-        assertThat(response.getStatus(), equalTo(HttpStatus.OK.value()));
         UserEntity actual = mapper.readValue(response.getContentAsString(), UserEntity.class);
 
+        assertThat(response.getStatus(), is(HttpStatus.OK.value()));
         assertThat(actual, is(userEntity));
     }
 
@@ -54,7 +54,7 @@ class UserControllerTest {
                 .andReturn()
                 .getResponse();
 
-        assertThat(response.getStatus(), equalTo(HttpStatus.BAD_REQUEST.value()));
+        assertThat(response.getStatus(), is(HttpStatus.BAD_REQUEST.value()));
     }
 
     @Test
@@ -62,14 +62,14 @@ class UserControllerTest {
         UserEntity userEntity = generateUser();
         when(service.put(userEntity)).thenReturn(1);
 
-        String json = mapper.writeValueAsString(userEntity);
+        String userUsString = mapper.writeValueAsString(userEntity);
         MockHttpServletResponse response = mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(json))
+                        .content(userUsString))
                 .andReturn()
                 .getResponse();
 
-        assertThat(response.getStatus(), equalTo(HttpStatus.OK.value()));
+        assertThat(response.getStatus(), is(HttpStatus.OK.value()));
     }
 
     @Test
@@ -83,11 +83,11 @@ class UserControllerTest {
                 .andReturn()
                 .getResponse();
 
-        List<UserEntity> actual = mapper.readValue(response.getContentAsString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, UserEntity.class));
+        UserEntity[] actual = mapper.readValue(response.getContentAsString(), UserEntity[].class);
 
-        assertThat(actual, containsInAnyOrder(equalTo(userEntity1), equalTo(userEntity2)));
-        assertThat(response.getStatus(), equalTo(HttpStatus.OK.value()));
+        assertThat(Arrays.asList(actual), containsInAnyOrder(userEntity1, userEntity2));
+        assertThat(response.getStatus(), is(HttpStatus.OK.value()));
+        assertThat(actual.length, is(2));
     }
 
     @Test
@@ -96,7 +96,8 @@ class UserControllerTest {
         MockHttpServletResponse response = mockMvc.perform(delete("/users/1").contentType(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
-        assertThat(response.getStatus(), equalTo(HttpStatus.OK.value()));
+
+        assertThat(response.getStatus(), is(HttpStatus.OK.value()));
     }
 
     @Test
@@ -105,6 +106,7 @@ class UserControllerTest {
         MockHttpServletResponse response = mockMvc.perform(delete("/users/1").contentType(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
-        assertThat(response.getStatus(), equalTo(HttpStatus.BAD_REQUEST.value()));
+
+        assertThat(response.getStatus(), is(HttpStatus.BAD_REQUEST.value()));
     }
 }
