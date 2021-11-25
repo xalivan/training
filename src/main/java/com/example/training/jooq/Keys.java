@@ -17,22 +17,22 @@ import org.jooq.impl.Internal;
 
 
 /**
- * A class modelling foreign key relationships and constraints of tables in 
+ * A class modelling foreign key relationships and constraints of tables in
  * public.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Keys {
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<RoleRecord> ROLE_PKEY = Internal.createUniqueKey(Role.ROLE, DSL.name("role_pkey"), new TableField[] { Role.ROLE.ROLE_ID }, true);
-    public static final UniqueKey<UserEntityRecord> USER_ENTITY_PKEY = Internal.createUniqueKey(UserEntity.USER_ENTITY, DSL.name("user_entity_pkey"), new TableField[] { UserEntity.USER_ENTITY.ID }, true);
+    public static final UniqueKey<RoleRecord> ROLE_PKEY = Internal.createUniqueKey(Role.ROLE, DSL.name("role_pkey"), new TableField[]{Role.ROLE.ROLE_ID}, true);
+    public static final UniqueKey<UserEntityRecord> USER_ENTITY_PKEY = Internal.createUniqueKey(UserEntity.USER_ENTITY, DSL.name("user_entity_pkey"), new TableField[]{UserEntity.USER_ENTITY.ID}, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<UserEntityRecord, RoleRecord> USER_ENTITY__FK_ROLE_ID = Internal.createForeignKey(UserEntity.USER_ENTITY, DSL.name("fk_role_id"), new TableField[] { UserEntity.USER_ENTITY.ROLE }, Keys.ROLE_PKEY, new TableField[] { Role.ROLE.ROLE_ID }, true);
+    public static final ForeignKey<UserEntityRecord, RoleRecord> USER_ENTITY__FK_ROLE_ID = Internal.createForeignKey(UserEntity.USER_ENTITY, DSL.name("fk_role_id"), new TableField[]{UserEntity.USER_ENTITY.ROLE}, Keys.ROLE_PKEY, new TableField[]{Role.ROLE.ROLE_ID}, true);
 }

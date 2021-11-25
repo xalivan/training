@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping
     public List<UserEntity> getAll() {
-          return userService.getAll();
+        return userService.getAll();
     }
 
     @DeleteMapping("{id}")
