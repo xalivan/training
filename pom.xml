@@ -19,8 +19,59 @@
         <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
         <java.version>11</java.version>
         <!--                    refresh table true=not refresh-->
-<!--        <skip.db.creation>false</skip.db.creation>-->
+        <!--        <skip.db.creation>false</skip.db.creation>-->
     </properties>
+    <!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>test</id>-->
+    <!--            <activation>-->
+    <!--                &lt;!&ndash; activate if system properties 'env=dev' &ndash;&gt;-->
+    <!--                <property>-->
+    <!--                    <name>env</name>-->
+    <!--                    <value>test</value>-->
+    <!--                </property>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <db.driverClassName>org.postgresql.Driver</db.driverClassName>-->
+    <!--                <db.url>jdbc:postgresql://postgres_db:5432/test</db.url>-->
+    <!--                <db.username>admin</db.username>-->
+    <!--                <db.password>1111</db.password>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+
+    <!--        <profile>-->
+    <!--            <id>prod</id>-->
+    <!--            <activation>-->
+    <!--                &lt;!&ndash; this profile is active by default &ndash;&gt;-->
+    <!--                <activeByDefault>true</activeByDefault>-->
+    <!--                <property>-->
+    <!--                    <name>env</name>-->
+    <!--                    <value>prod</value>-->
+    <!--                </property>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <db.driverClassName>org.postgresql.Driver</db.driverClassName>-->
+    <!--                <db.url>jdbc:postgresql://localhost:5432/prod</db.url>-->
+    <!--                <db.username>admin</db.username>-->
+    <!--                <db.password>1111</db.password>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
+
+    <!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>test</id>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>test</spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>prod</id>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>prod</spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
 
     <dependencies>
         <dependency>
@@ -59,16 +110,23 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--                <configuration>-->
+                <!--                    <profiles>-->
+                <!--                        <profile>test</profile>-->
+                <!--                        <profile>prod</profile>-->
+                <!--                    </profiles>-->
+                <!--                </configuration>-->
             </plugin>
-<!--            Plugin for reading properties from the system file application.properties-->
+
+            <!--            Plugin for reading properties from the system file application.properties-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
@@ -82,6 +140,8 @@
                         <configuration>
                             <files>
                                 <file>src/main/resources/application.properties</file>
+                                <file>src/main/resources/application-test.properties</file>
+                                <!--                                <filtering>true</filtering>-->
                             </files>
                         </configuration>
                     </execution>
@@ -100,8 +160,7 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- Specify the plugin configuration.
-                     The configuration format is the same as for the standalone code generator -->
+                <!-- Specify the plugin configuration. The configuration format is the same as for the standalone code generator -->
                 <configuration>
                     <jdbc>
                         <driver>${spring.datasource.driver-class-name}</driver>

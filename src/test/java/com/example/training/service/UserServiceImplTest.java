@@ -49,7 +49,7 @@ class UserServiceImplTest {
         UserEntity userEntity1 = generateUser();
         UserEntity userEntity2 = generateUser();
         when(repository.findAll()).thenReturn(List.of(userEntity1, userEntity2));
-        assertThat(service.getAll(), containsInAnyOrder(userEntity1 , userEntity2));
+        assertThat(service.getAll(), containsInAnyOrder(userEntity1, userEntity2));
     }
 
     @Test
