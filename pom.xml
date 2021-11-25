@@ -21,6 +21,31 @@
         <!--                    refresh table true=not refresh-->
         <!--        <skip.db.creation>false</skip.db.creation>-->
     </properties>
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <!-- this profile is active by default -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.driverClassName>org.postgresql.Driver</db.driverClassName>
+                <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+                <db.username>admin</db.username>
+                <db.password>1111</db.password>
+            </properties>
+
+        </profile>
+        <profile>
+            <id>docker</id>
+            <properties>
+                <db.driverClassName>org.postgresql.Driver</db.driverClassName>
+                <db.url>jdbc:postgresql://db:5432/postgres</db.url>
+                <db.username>postgres</db.username>
+                <db.password>postgres</db.password>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -60,42 +85,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-starter-actuator</artifactId>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-devtools</artifactId>-->
-        <!--            <scope>runtime</scope>-->
-        <!--            <optional>true</optional>-->
-        <!--        </dependency>-->
-
     </dependencies>
 
     <build>
         <plugins>
-
-            <!--Plugin to support Docker Layer-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.springframework.boot</groupId>-->
-            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-            <!--                <configuration>-->
-            <!--                    <layers>-->
-            <!--                        <enabled>true</enabled>-->
-            <!--                        <includeLayerTools>true</includeLayerTools>-->
-            <!--                    </layers>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
-            <!--                <version>3.1</version>-->
-            <!--                <configuration>-->
-            <!--                    <source>11</source>-->
-            <!--                    <target>11</target>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -132,8 +125,7 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- Specify the plugin configuration.
-                     The configuration format is the same as for the standalone code generator -->
+                <!-- Specify the plugin configuration. The configuration format is the same as for the standalone code generator -->
                 <configuration>
                     <jdbc>
                         <driver>${spring.datasource.driver-class-name}</driver>
