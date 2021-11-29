@@ -21,31 +21,65 @@
         <!--                    refresh table true=not refresh-->
         <!--        <skip.db.creation>false</skip.db.creation>-->
     </properties>
-    <profiles>
-        <profile>
-            <id>local</id>
-            <activation>
-                <!-- this profile is active by default -->
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <db.driverClassName>org.postgresql.Driver</db.driverClassName>
-                <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
-                <db.username>admin</db.username>
-                <db.password>1111</db.password>
-            </properties>
+        <profiles>
+            <profile>
+                <id>local</id>
+                <activation>
+                    <!-- this profile is active by default -->
+                    <activeByDefault>true</activeByDefault>
+                </activation>
+                <properties>
+                    <db.driverClassName>org.postgresql.Driver</db.driverClassName>
+                    <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+                    <db.username>admin</db.username>
+                    <db.password>1111</db.password>
+                </properties>
 
-        </profile>
-        <profile>
-            <id>docker</id>
-            <properties>
-                <db.driverClassName>org.postgresql.Driver</db.driverClassName>
-                <db.url>jdbc:postgresql://db:5432/postgres</db.url>
-                <db.username>postgres</db.username>
-                <db.password>postgres</db.password>
-            </properties>
-        </profile>
-    </profiles>
+            </profile>
+            <profile>
+                <id>docker</id>
+                <properties>
+                    <db.driverClassName>org.postgresql.Driver</db.driverClassName>
+                    <db.url>jdbc:postgresql://db:5432/postgres</db.url>
+                    <db.username>postgres</db.username>
+                    <db.password>postgres</db.password>
+                </properties>
+            </profile>
+        </profiles>
+    <!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>local</id>-->
+    <!--            <activation>-->
+    <!--                <activeByDefault>true</activeByDefault>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>local</spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>docker</id>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>docker</spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
+    <!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>local</id>-->
+    <!--            <activation>-->
+    <!--                <activeByDefault>true</activeByDefault>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>local</spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>docker</id>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>docker</spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
 
     <dependencies>
         <dependency>
@@ -84,7 +118,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -92,7 +125,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <profiles>
+                        <profile>docker</profile>
+                        <profile>local</profile>
+                    </profiles>
+                </configuration>
             </plugin>
+
             <!--            Plugin for reading properties from the system file application.properties-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -107,6 +147,10 @@
                         <configuration>
                             <files>
                                 <file>src/main/resources/application.properties</file>
+<!--                                <file>src/main/resources/application-test.properties</file>-->
+<!--                                <file>src/main/resources/application-prod.properties</file>-->
+
+<!--                                <filtering>true</filtering>-->
                             </files>
                         </configuration>
                     </execution>

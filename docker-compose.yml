@@ -1,24 +1,15 @@
 version: '3'
-
 services:
-  app:
-    container_name: training
-    image: training:latest
+  api_service:
+    build: .
+    restart: always
     ports:
-      - "8080:8080"
-    build:
-      context: .
-    environment:
-      - PORT=8080
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - 8080:8080
     depends_on:
-      - db
+      - postgres_db
 
-  db:
-    image: postgres:latest
-    container_name: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+  postgres_db:
+    image: "postgres:latest"
+    restart: always
+    ports:
+      - 5433:5432
