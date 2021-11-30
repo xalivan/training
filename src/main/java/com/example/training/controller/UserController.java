@@ -1,6 +1,7 @@
 package com.example.training.controller;
 
 import com.example.training.model.UserEntity;
+import com.example.training.service.UserService;
 import com.example.training.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @GetMapping("{id}")
     public ResponseEntity<UserEntity> getUserById(@PathVariable Integer id) {
@@ -28,7 +29,7 @@ public class UserController {
 
     @GetMapping
     public List<UserEntity> getAll() {
-          return userService.getAll();
+        return userService.getAll();
     }
 
     @DeleteMapping("{id}")
