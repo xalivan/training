@@ -21,62 +21,54 @@
         <!--                    refresh table true=not refresh-->
         <!--        <skip.db.creation>false</skip.db.creation>-->
     </properties>
-        <profiles>
-            <profile>
-                <id>local</id>
-                <activation>
-                    <!-- this profile is active by default -->
-                    <activeByDefault>true</activeByDefault>
-                </activation>
-                <properties>
-                    <db.driverClassName>org.postgresql.Driver</db.driverClassName>
-                    <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
-                    <db.username>admin</db.username>
-                    <db.password>1111</db.password>
-                </properties>
-
-            </profile>
-            <profile>
-                <id>docker</id>
-                <properties>
-                    <db.driverClassName>org.postgresql.Driver</db.driverClassName>
-                    <db.url>jdbc:postgresql://db:5432/postgres</db.url>
-                    <db.username>postgres</db.username>
-                    <db.password>postgres</db.password>
-                </properties>
-            </profile>
-        </profiles>
     <!--    <profiles>-->
     <!--        <profile>-->
-    <!--            <id>local</id>-->
+    <!--            <id>test</id>-->
     <!--            <activation>-->
-    <!--                <activeByDefault>true</activeByDefault>-->
+    <!--                &lt;!&ndash; activate if system properties 'env=dev' &ndash;&gt;-->
+    <!--                <property>-->
+    <!--                    <name>env</name>-->
+    <!--                    <value>test</value>-->
+    <!--                </property>-->
     <!--            </activation>-->
     <!--            <properties>-->
-    <!--                <spring.profiles.active>local</spring.profiles.active>-->
+    <!--                <db.driverClassName>org.postgresql.Driver</db.driverClassName>-->
+    <!--                <db.url>jdbc:postgresql://postgres_db:5432/test</db.url>-->
+    <!--                <db.username>admin</db.username>-->
+    <!--                <db.password>1111</db.password>-->
     <!--            </properties>-->
     <!--        </profile>-->
+
     <!--        <profile>-->
-    <!--            <id>docker</id>-->
+    <!--            <id>prod</id>-->
+    <!--            <activation>-->
+    <!--                &lt;!&ndash; this profile is active by default &ndash;&gt;-->
+    <!--                <activeByDefault>true</activeByDefault>-->
+    <!--                <property>-->
+    <!--                    <name>env</name>-->
+    <!--                    <value>prod</value>-->
+    <!--                </property>-->
+    <!--            </activation>-->
     <!--            <properties>-->
-    <!--                <spring.profiles.active>docker</spring.profiles.active>-->
+    <!--                <db.driverClassName>org.postgresql.Driver</db.driverClassName>-->
+    <!--                <db.url>jdbc:postgresql://localhost:5432/prod</db.url>-->
+    <!--                <db.username>admin</db.username>-->
+    <!--                <db.password>1111</db.password>-->
     <!--            </properties>-->
     <!--        </profile>-->
     <!--    </profiles>-->
+
     <!--    <profiles>-->
     <!--        <profile>-->
-    <!--            <id>local</id>-->
-    <!--            <activation>-->
-    <!--                <activeByDefault>true</activeByDefault>-->
-    <!--            </activation>-->
+    <!--            <id>test</id>-->
     <!--            <properties>-->
-    <!--                <spring.profiles.active>local</spring.profiles.active>-->
+    <!--                <spring.profiles.active>test</spring.profiles.active>-->
     <!--            </properties>-->
     <!--        </profile>-->
     <!--        <profile>-->
-    <!--            <id>docker</id>-->
+    <!--            <id>prod</id>-->
     <!--            <properties>-->
-    <!--                <spring.profiles.active>docker</spring.profiles.active>-->
+    <!--                <spring.profiles.active>prod</spring.profiles.active>-->
     <!--            </properties>-->
     <!--        </profile>-->
     <!--    </profiles>-->
@@ -122,15 +114,16 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <profiles>
-                        <profile>docker</profile>
-                        <profile>local</profile>
-                    </profiles>
-                </configuration>
+                <!--                <configuration>-->
+                <!--                    <profiles>-->
+                <!--                        <profile>test</profile>-->
+                <!--                        <profile>prod</profile>-->
+                <!--                    </profiles>-->
+                <!--                </configuration>-->
             </plugin>
 
             <!--            Plugin for reading properties from the system file application.properties-->
@@ -147,10 +140,8 @@
                         <configuration>
                             <files>
                                 <file>src/main/resources/application.properties</file>
-<!--                                <file>src/main/resources/application-test.properties</file>-->
-<!--                                <file>src/main/resources/application-prod.properties</file>-->
-
-<!--                                <filtering>true</filtering>-->
+                                <file>src/main/resources/application-test.properties</file>
+                                <!--                                <filtering>true</filtering>-->
                             </files>
                         </configuration>
                     </execution>

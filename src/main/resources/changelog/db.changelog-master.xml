@@ -46,24 +46,24 @@
         </insert>
     </changeSet>
 
-<!--    <changeSet author="Mazur" id="changelog-5.0">-->
-<!--        <insert tableName="user_entity">-->
-<!--            <column name="id" value="100"/>-->
-<!--            <column name="first_name" value="1111"/>-->
-<!--            <column name="last_name" value="1111"/>-->
-<!--            <column name="password" value="$2a$12$oYf5JSxoQzRs2WgP3/1o8uRaPIYqbVACCyNnWj2PhN0b/2aFd6kuO"/>-->
-<!--            <column name="role" value="0"/>-->
-<!--        </insert>-->
-<!--    </changeSet>-->
+    <changeSet author="Mazur" id="changelog-5.0">
+        <insert tableName="user_entity">
+            <column name="id" value="100"/>
+            <column name="first_name" value="1111"/>
+            <column name="last_name" value="1111"/>
+            <column name="password" value="$2a$12$oYf5JSxoQzRs2WgP3/1o8uRaPIYqbVACCyNnWj2PhN0b/2aFd6kuO"/>
+            <column name="role" value="0"/>
+        </insert>
+    </changeSet>
 
-<!--    <changeSet author="Mazur" id="changelog-6.0">-->
-<!--        <insert tableName="user_entity">-->
-<!--            <column name="id" value="101"/>-->
-<!--            <column name="first_name" value="2222"/>-->
-<!--            <column name="last_name" value="2222"/>-->
-<!--            <column name="password" value="$2a$12$oYf5JSxoQzRs2WgP3/1o8uRaPIYqbVACCyNnWj2PhN0b/2aFd6kuO"/>-->
-<!--            <column name="role" value="1"/>-->
-<!--        </insert>-->
-<!--    </changeSet>-->
+    <changeSet author="Mazur" id="changelog-6.0">
+        <insert tableName="user_entity">
+            <column name="id" value="101"/>
+            <column name="first_name" value="2222"/>
+            <column name="last_name" value="2222"/>
+            <column name="password" value="$2a$12$oYf5JSxoQzRs2WgP3/1o8uRaPIYqbVACCyNnWj2PhN0b/2aFd6kuO"/>
+            <column name="role" value="1"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>
