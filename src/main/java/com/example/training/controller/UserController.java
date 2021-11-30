@@ -2,12 +2,9 @@ package com.example.training.controller;
 
 import com.example.training.model.UserEntity;
 import com.example.training.service.UserService;
-import com.example.training.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
