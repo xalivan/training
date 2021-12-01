@@ -18,7 +18,26 @@
     <properties>
         <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
         <java.version>11</java.version>
+
     </properties>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -57,6 +76,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -81,6 +101,7 @@
                         <configuration>
                             <files>
                                 <file>src/main/resources/application.properties</file>
+                                <file>src/main/resources/application-test.properties</file>
                             </files>
                         </configuration>
                     </execution>
@@ -127,4 +148,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
