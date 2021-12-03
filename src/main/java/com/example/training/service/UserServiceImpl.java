@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean delete(int id) {
-        log.info("UserServiceImpl.delete. User with id= " + id + "deleted");
+        log.info("UserServiceImpl.delete. User with id= " + id + " deleted");
         return userRepository.delete(id) > 0;
     }
 
