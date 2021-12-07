@@ -12,7 +12,7 @@
 
         <createTable tableName="user_entity">
             <column autoIncrement="true" name="id" type="INTEGER">
-                <constraints nullable="false" primaryKey="true" />
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="first_name" type="VARCHAR(255)"/>
             <column name="last_name" type="VARCHAR(255)"/>
@@ -30,5 +30,19 @@
         <addForeignKeyConstraint baseTableName="user_entity" baseColumnNames="role"
                                  constraintName="fk_role_id"
                                  referencedTableName="role" referencedColumnNames="role_id"/>
+    </changeSet>
+
+    <changeSet author="Mazur" id="changelog-3.0">
+        <insert tableName="role">
+            <column name="role_id" value="0"/>
+            <column name="role" value="USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Mazur" id="changelog-4.0">
+        <insert tableName="role">
+            <column name="role_id" value="1"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
