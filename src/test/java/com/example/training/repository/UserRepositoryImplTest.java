@@ -25,11 +25,12 @@ class UserRepositoryImplTest {
     }
 
     @Test
-   public void insertTest() {
+    public void insertTest() {
         UserEntity user = generateUser();
 
-        assertThat(getUserEntityByIdTest(user.getId()), is(Optional.empty()));
+        assertThat(getUserEntityByIdTest(user.getId()).isEmpty(), is(true));
         assertThat(repository.insert(user), is(1));
+        assertThat(getUserEntityByIdTest(user.getId()).isPresent(), is(true));
         assertThat(getUserEntityByIdTest(user.getId()).get(), is(user));
     }
 
@@ -37,9 +38,13 @@ class UserRepositoryImplTest {
     public void updateTest() {
         UserEntity user = generateUser();
         insertUserEntityTest(user);
-        UserEntity userEntity = getUserEntityByIdTest(user.getId()).get();
+        UserEntity userUpdate = generateUser();
+        UserEntity newUser = new UserEntity(user.getId(), userUpdate.getFirstName(), userUpdate.getLastName(), userUpdate.getPassword(), userUpdate.getRole());
 
-        assertThat(repository.update(userEntity), is(1));
+        assertThat(getUserEntityByIdTest(user.getId()).isPresent(), is(true));
+        assertThat(repository.update(newUser), is(1));
+        assertThat(getUserEntityByIdTest(newUser.getId()).isPresent(), is(true));
+        assertThat(getUserEntityByIdTest(newUser.getId()).get(), is(newUser));
     }
 
     @Test
@@ -66,6 +71,7 @@ class UserRepositoryImplTest {
         UserEntity user = generateUser();
         insertUserEntityTest(user);
 
+        assertThat(repository.findById(user.getId()).isPresent(), is(true));
         assertThat(repository.findById(user.getId()).get(), is(user));
     }
 
@@ -74,6 +80,7 @@ class UserRepositoryImplTest {
         UserEntity user = generateUser();
         insertUserEntityTest(user);
 
+        assertThat(repository.findOneByLastName(user.getLastName()).isPresent(), is(true));
         assertThat(repository.findOneByLastName(user.getLastName()).get(), is(user));
     }
 
