@@ -20,7 +20,7 @@ class UserRepositoryImplTest {
     private final UserRepository repository = new UserRepositoryImpl(dsl);
 
     @AfterEach
-    void tearDown() {
+    public void tearDownTest() {
         dsl.deleteFrom(USER_ENTITY).execute();
     }
 
@@ -30,21 +30,33 @@ class UserRepositoryImplTest {
 
         assertThat(getUserEntityByIdTest(user.getId()).isEmpty(), is(true));
         assertThat(repository.insert(user), is(1));
-        assertThat(getUserEntityByIdTest(user.getId()).isPresent(), is(true));
-        assertThat(getUserEntityByIdTest(user.getId()).get(), is(user));
+
+        Optional<UserEntity> userOptional = getUserEntityByIdTest(user.getId());
+        assertThat(userOptional.isPresent(), is(true));
+        assertThat(userOptional.get(), is(user));
     }
 
     @Test
     public void updateTest() {
         UserEntity user = generateUser();
         insertUserEntityTest(user);
-        UserEntity userUpdate = generateUser();
-        UserEntity newUser = new UserEntity(user.getId(), userUpdate.getFirstName(), userUpdate.getLastName(), userUpdate.getPassword(), userUpdate.getRole());
 
-        assertThat(getUserEntityByIdTest(user.getId()).isPresent(), is(true));
+        Optional<UserEntity> userOptional = getUserEntityByIdTest(user.getId());
+        assertThat(userOptional.isPresent(), is(true));
+        assertThat(userOptional.get(), is(user));
+
+        UserEntity userUpdate = generateUser();
+        UserEntity newUser = new UserEntity(user.getId(),
+                                            userUpdate.getFirstName(),
+                                            userUpdate.getLastName(),
+                                            userUpdate.getPassword(),
+                                            userUpdate.getRole());
+
         assertThat(repository.update(newUser), is(1));
-        assertThat(getUserEntityByIdTest(newUser.getId()).isPresent(), is(true));
-        assertThat(getUserEntityByIdTest(newUser.getId()).get(), is(newUser));
+
+        Optional<UserEntity> userOptionalUpdate = getUserEntityByIdTest(newUser.getId());
+        assertThat(userOptionalUpdate.isPresent(), is(true));
+        assertThat(userOptionalUpdate.get(), is(newUser));
     }
 
     @Test
@@ -71,8 +83,9 @@ class UserRepositoryImplTest {
         UserEntity user = generateUser();
         insertUserEntityTest(user);
 
-        assertThat(repository.findById(user.getId()).isPresent(), is(true));
-        assertThat(repository.findById(user.getId()).get(), is(user));
+        Optional<UserEntity> userOptional = repository.findById(user.getId());
+        assertThat(userOptional.isPresent(), is(true));
+        assertThat(userOptional.get(), is(user));
     }
 
     @Test
@@ -80,8 +93,9 @@ class UserRepositoryImplTest {
         UserEntity user = generateUser();
         insertUserEntityTest(user);
 
-        assertThat(repository.findOneByLastName(user.getLastName()).isPresent(), is(true));
-        assertThat(repository.findOneByLastName(user.getLastName()).get(), is(user));
+        Optional<UserEntity> userOptional = repository.findOneByLastName(user.getLastName());
+        assertThat(userOptional.isPresent(), is(true));
+        assertThat(userOptional.get(), is(user));
     }
 
     private Optional<UserEntity> getUserEntityByIdTest(int id) {
