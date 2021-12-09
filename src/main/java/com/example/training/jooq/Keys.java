@@ -4,8 +4,10 @@
 package com.example.training.jooq;
 
 
+import com.example.training.jooq.tables.Line;
 import com.example.training.jooq.tables.Role;
 import com.example.training.jooq.tables.UserEntity;
+import com.example.training.jooq.tables.records.LineRecord;
 import com.example.training.jooq.tables.records.RoleRecord;
 import com.example.training.jooq.tables.records.UserEntityRecord;
 
@@ -27,6 +29,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<LineRecord> LINE_PKEY = Internal.createUniqueKey(Line.LINE, DSL.name("line_pkey"), new TableField[] { Line.LINE.ID }, true);
     public static final UniqueKey<RoleRecord> ROLE_PKEY = Internal.createUniqueKey(Role.ROLE, DSL.name("role_pkey"), new TableField[] { Role.ROLE.ROLE_ID }, true);
     public static final UniqueKey<UserEntityRecord> USER_ENTITY_PKEY = Internal.createUniqueKey(UserEntity.USER_ENTITY, DSL.name("user_entity_pkey"), new TableField[] { UserEntity.USER_ENTITY.ID }, true);
 

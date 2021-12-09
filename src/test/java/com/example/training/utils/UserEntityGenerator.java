@@ -15,7 +15,10 @@ public class UserEntityGenerator {
     private final static Random RANDOM = new Random();
 
     public static UserEntity generateUser() {
-        return new UserEntity(RANDOM.nextInt(1000), UUID.randomUUID().toString(), UUID.randomUUID().toString(), randomUUID().toString(), getRole());
+        return new UserEntity(RANDOM.nextInt(1000),
+                              UUID.randomUUID().toString(),
+                              UUID.randomUUID().toString(),
+                              randomUUID().toString(), getRole());
     }
 
     private static Role getRole() {

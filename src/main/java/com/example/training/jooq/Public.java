@@ -4,6 +4,7 @@
 package com.example.training.jooq;
 
 
+import com.example.training.jooq.tables.Line;
 import com.example.training.jooq.tables.Role;
 import com.example.training.jooq.tables.UserEntity;
 
@@ -27,6 +28,11 @@ public class Public extends SchemaImpl {
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.line</code>.
+     */
+    public final Line LINE = Line.LINE;
 
     /**
      * The table <code>public.role</code>.
@@ -54,6 +60,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
+            Line.LINE,
             Role.ROLE,
             UserEntity.USER_ENTITY);
     }
