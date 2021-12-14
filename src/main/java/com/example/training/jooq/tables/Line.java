@@ -8,7 +8,7 @@ import com.example.training.jooq.Keys;
 import com.example.training.jooq.Public;
 import com.example.training.jooq.tables.records.LineRecord;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,9 +55,9 @@ public class Line extends TableImpl<LineRecord> {
     public final TableField<LineRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>public.line.creation_date</code>.
+     * The column <code>public.line.date</code>.
      */
-    public final TableField<LineRecord, LocalDate> CREATION_DATE = createField(DSL.name("creation_date"), SQLDataType.LOCALDATE, this, "");
+    public final TableField<LineRecord, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
      * The column <code>public.line.length</code>.
@@ -154,7 +154,7 @@ public class Line extends TableImpl<LineRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Integer, LocalDate, Integer, Object> fieldsRow() {
+    public Row4<Integer, LocalDateTime, Integer, Object> fieldsRow() {
         return (Row4) super.fieldsRow();
     }
 }

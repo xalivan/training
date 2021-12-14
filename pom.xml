@@ -59,6 +59,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -113,7 +120,7 @@
                     <!-- Generator parameters -->
                     <generator>
                         <database>
-                            <includes>line | role | user_entity</includes>
+                            <includes>line|role|user_entity</includes>
 <!--                            <excludes>databasechangelog | databasechangeloglock</excludes>-->
                             <inputSchema>public</inputSchema>
                         </database>

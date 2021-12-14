@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface LineService {
     List<Line> getAll();
+
     boolean delete(int id);
-    int save(List<Point> pointsy);
+
+    int save(List<Point> points);
 }

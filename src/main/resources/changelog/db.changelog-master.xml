@@ -51,10 +51,11 @@
             <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
-            <column name="creation_date" type="DATE"/>
+            <column name="date" type="TIMESTAMP"/>
             <column name="length" type="INTEGER"/>
             <column name="geom" type="geometry"/>
         </createTable>
     </changeSet>
 
 </databaseChangeLog>
+        <!--<column name="geometry" type="geometry(LineString, 4326)"/>-->
