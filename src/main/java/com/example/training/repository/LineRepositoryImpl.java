@@ -1,16 +1,17 @@
 package com.example.training.repository;
 
+import com.example.training.model.LineEntity;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+
 import static com.example.training.jooq.tables.Line.LINE;
 import static com.example.training.repository.utils.GeometryConverter.*;
-import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.currentLocalDateTime;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,11 +21,11 @@ public class LineRepositoryImpl implements LineRepository {
 
     @Override
     public int save(String points) {
-        String geometry = "ST_GeomFromText('LINESTRING(" + points + ")', 4326)";
-        LocalDateTime now = LocalDateTime.now();
 
-        return Objects.requireNonNull(dsl.insertInto(LINE, LINE.DATE, LINE.LENGTH, LINE.GEOM)
-                .values( DATE_FIELD.apply(now), LENGTH_FIELD.apply(geometry), GEOMETRY_FIELD.apply(geometry))
+        return Objects.requireNonNull(dsl.insertInto(LINE, LINE.DATE, LINE.LENGTH, LINE.GEOMETRY)
+                .values(currentLocalDateTime(),
+                        LENGTH_FIELD.apply(GEOMETRY.apply(points)),
+                        GEOMETRY_FIELD.apply(GEOMETRY.apply(points)))
                 .returningResult(LINE.ID).fetchOne()).get(LINE.ID);
     }
 
@@ -36,18 +37,8 @@ public class LineRepositoryImpl implements LineRepository {
     }
 
     @Override
-    public List<String> findAllGeom() {
-
-        return dsl.select(field("st_astext(" + LINE.GEOM + ")"))
-                .from(LINE)
-                .fetchInto(String.class);
-    }
-
-    @Override
-    public List<Integer> findAllLength() {
-
-        return dsl.select(LINE.LENGTH)
-                .from(LINE)
-                .fetchInto(Integer.class);
+    public List<LineEntity> findAll() {
+        return dsl.select(LINE.ID, LINE.DATE, LINE.LENGTH, GEOMETRY_SELECT_FIELD_AS_GEO_JSON.apply(String.valueOf(LINE.GEOMETRY)))
+                .from(LINE).fetchInto(LineEntity.class);
     }
 }

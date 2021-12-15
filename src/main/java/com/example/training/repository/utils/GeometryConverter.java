@@ -6,7 +6,6 @@ import org.jooq.Field;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
-import java.time.LocalDateTime;
 import java.util.function.Function;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -16,6 +15,9 @@ public class GeometryConverter {
 
     public static final Function<String, Field<Object>> GEOMETRY_FIELD = DSL::field;
 
-    public static final Function<LocalDateTime, Field<LocalDateTime>> DATE_FIELD = localDateTime ->
-            DSL.field("{0}", SQLDataType.LOCALDATETIME, localDateTime);
+    public static final Function<String, String> GEOMETRY = points ->
+            "ST_GeomFromText('LINESTRING(" + points + ")', 4326)";
+
+    public static final Function<String, Field<String>> GEOMETRY_SELECT_FIELD_AS_GEO_JSON = geometry ->
+            DSL.field("ST_AsGeoJSON(" + geometry + ")", String.class);
 }

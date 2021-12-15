@@ -1,5 +1,7 @@
 package com.example.training.repository;
 
+import com.example.training.model.LineEntity;
+
 import java.util.List;
 
 public interface LineRepository {
@@ -8,9 +10,6 @@ public interface LineRepository {
 
     int delete(int id);
 
-    List<String> findAllGeom();
-
-    List<Integer> findAllLength();
-
+    List<LineEntity> findAll();
 }
 

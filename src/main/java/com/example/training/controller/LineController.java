@@ -1,8 +1,9 @@
 package com.example.training.controller;
 
 import com.example.training.model.Line;
-import com.example.training.model.Point;
+import com.example.training.model.utils.Point;
 import com.example.training.service.LineServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class LineController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Line>> getAll() {
+    public ResponseEntity<List<Line>> getAll() throws JsonProcessingException {
         return ResponseEntity.ok(service.getAll());
     }
 }

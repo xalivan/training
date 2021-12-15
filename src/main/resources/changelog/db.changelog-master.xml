@@ -53,7 +53,7 @@
             </column>
             <column name="date" type="TIMESTAMP"/>
             <column name="length" type="INTEGER"/>
-            <column name="geom" type="geometry"/>
+            <column name="geometry" type="geometry"/>
         </createTable>
     </changeSet>
 

@@ -69,7 +69,7 @@ public class LineRecord extends UpdatableRecordImpl<LineRecord> implements Recor
      * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled. Deprecation can be turned off using {@literal <deprecationOnUnknownTypes/>} in your code generator configuration.
      */
     @Deprecated
-    public void setGeom(Object value) {
+    public void setGeometry(Object value) {
         set(3, value);
     }
 
@@ -77,7 +77,7 @@ public class LineRecord extends UpdatableRecordImpl<LineRecord> implements Recor
      * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled. Deprecation can be turned off using {@literal <deprecationOnUnknownTypes/>} in your code generator configuration.
      */
     @Deprecated
-    public Object getGeom() {
+    public Object getGeometry() {
         return get(3);
     }
 
@@ -125,7 +125,7 @@ public class LineRecord extends UpdatableRecordImpl<LineRecord> implements Recor
     @Deprecated
     @Override
     public Field<Object> field4() {
-        return Line.LINE.GEOM;
+        return Line.LINE.GEOMETRY;
     }
 
     @Override
@@ -149,7 +149,7 @@ public class LineRecord extends UpdatableRecordImpl<LineRecord> implements Recor
     @Deprecated
     @Override
     public Object component4() {
-        return getGeom();
+        return getGeometry();
     }
 
     @Override
@@ -173,7 +173,7 @@ public class LineRecord extends UpdatableRecordImpl<LineRecord> implements Recor
     @Deprecated
     @Override
     public Object value4() {
-        return getGeom();
+        return getGeometry();
     }
 
     @Override
@@ -200,7 +200,7 @@ public class LineRecord extends UpdatableRecordImpl<LineRecord> implements Recor
     @Deprecated
     @Override
     public LineRecord value4(Object value) {
-        setGeom(value);
+        setGeometry(value);
         return this;
     }
 
@@ -227,12 +227,12 @@ public class LineRecord extends UpdatableRecordImpl<LineRecord> implements Recor
     /**
      * Create a detached, initialised LineRecord
      */
-    public LineRecord(Integer id, LocalDateTime date, Integer length, Object geom) {
+    public LineRecord(Integer id, LocalDateTime date, Integer length, Object geometry) {
         super(Line.LINE);
 
         setId(id);
         setDate(date);
         setLength(length);
-        setGeom(geom);
+        setGeometry(geometry);
     }
 }

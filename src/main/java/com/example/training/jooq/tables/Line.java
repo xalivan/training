@@ -68,7 +68,7 @@ public class Line extends TableImpl<LineRecord> {
      * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled. Deprecation can be turned off using {@literal <deprecationOnUnknownTypes/>} in your code generator configuration.
      */
     @Deprecated
-    public final TableField<LineRecord, Object> GEOM = createField(DSL.name("geom"), org.jooq.impl.DefaultDataType.getDefaultDataType("\"public\".\"geometry\""), this, "");
+    public final TableField<LineRecord, Object> GEOMETRY = createField(DSL.name("geometry"), org.jooq.impl.DefaultDataType.getDefaultDataType("\"public\".\"geometry\""), this, "");
 
     private Line(Name alias, Table<LineRecord> aliased) {
         this(alias, aliased, null);
