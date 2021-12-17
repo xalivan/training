@@ -2,10 +2,11 @@ package com.example.training.service;
 
 import com.example.training.model.Line;
 import com.example.training.model.LineEntity;
+import com.example.training.model.utils.LineCoordinates;
 import com.example.training.model.utils.Point;
 import com.example.training.repository.LineRepository;
-import com.example.training.service.utils.ConverterLineEntityToLineResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LineServiceImpl implements LineService {
     private final LineRepository repository;
-    private final ConverterLineEntityToLineResponse converter;
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public List<Line> getAll() throws JsonProcessingException {
-        List<LineEntity> all = repository.findAll();
-        List<Line> lineResponse =new ArrayList<>();
-        for (int i = 0; i < all.size(); i++) {
-                Line line = converter.doLineResponseFromLineEntity(all.get(i));
-                lineResponse.add(line);
+
+           List<Line>lineResponse=new ArrayList<>();
+        for (LineEntity lineEntity : repository.findAll()) {
+            LineCoordinates point = objectMapper.readValue(lineEntity.getCoordinates(), LineCoordinates.class);
+            List<List<Double>> coordinates = point.getCoordinates();
+            List<Point> collect = coordinates.stream().map(doubles -> new Point(doubles.get(0), doubles.get(1))).collect(Collectors.toList());
+            Line line = new Line(lineEntity.getId(), lineEntity.getDate(), lineEntity.getLength(), collect);
+            lineResponse.add(line);
         }
         return lineResponse;
     }

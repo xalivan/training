@@ -1,9 +1,9 @@
 package com.example.training.model.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import lombok.Getter;
 
-@Value
+@Getter
 public class Point  {
     double x;
     double y;
