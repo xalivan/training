@@ -5,6 +5,7 @@ package com.example.training.jooq;
 
 
 import com.example.training.jooq.tables.Line;
+import com.example.training.jooq.tables.Polygon;
 import com.example.training.jooq.tables.Role;
 import com.example.training.jooq.tables.UserEntity;
 
@@ -35,6 +36,11 @@ public class Public extends SchemaImpl {
     public final Line LINE = Line.LINE;
 
     /**
+     * The table <code>public.polygon</code>.
+     */
+    public final Polygon POLYGON = Polygon.POLYGON;
+
+    /**
      * The table <code>public.role</code>.
      */
     public final Role ROLE = Role.ROLE;
@@ -61,6 +67,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Line.LINE,
+            Polygon.POLYGON,
             Role.ROLE,
             UserEntity.USER_ENTITY);
     }

@@ -112,7 +112,7 @@
                     <!-- Generator parameters -->
                     <generator>
                         <database>
-                            <includes>line|role|user_entity</includes>
+                            <includes>polygon|line|role|user_entity</includes>
 <!--                            <excludes>databasechangelog | databasechangeloglock</excludes>-->
                             <inputSchema>public</inputSchema>
                         </database>

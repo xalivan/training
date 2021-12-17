@@ -57,5 +57,14 @@
         </createTable>
     </changeSet>
 
+    <changeSet author="Mazur" id="changelog-5.0">
+        <createTable tableName="polygon">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+             <column name="square" type="DOUBLE"/>
+            <column name="geometry" type="geometry"/>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
-        <!--<column name="geometry" type="geometry(LineString, 4326)"/>-->
