@@ -1,15 +1,18 @@
 package com.example.training.model;
 
-import com.example.training.model.utils.BaseEntity;
+import com.example.training.model.utils.BaseLine;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
-@Value
-public class LineEntity extends BaseEntity {
+@Getter
+@Setter
+public class LineEntity extends BaseLine {
 
-    String coordinates;
+    private final String coordinates;
 
     public LineEntity(int id, LocalDateTime date, int length, String coordinates) {
         super(id, date, length);

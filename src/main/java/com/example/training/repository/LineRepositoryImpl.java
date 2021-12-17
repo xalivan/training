@@ -10,8 +10,9 @@ import java.util.Objects;
 
 
 import static com.example.training.jooq.tables.Line.LINE;
-import static com.example.training.repository.utils.GeometryConverter.*;
+import static com.example.training.repository.utils.PostGisUtils.*;
 import static org.jooq.impl.DSL.currentLocalDateTime;
+import static org.jooq.impl.DSL.field;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class LineRepositoryImpl implements LineRepository {
         return Objects.requireNonNull(dsl.insertInto(LINE, LINE.DATE, LINE.LENGTH, LINE.GEOMETRY)
                 .values(currentLocalDateTime(),
                         ST_LENGTH.apply(ST_GEOM_FROM_TEXT.apply(points)),
-                        GEOMETRY_FIELD.apply(ST_GEOM_FROM_TEXT.apply(points)))
+                        field(ST_GEOM_FROM_TEXT.apply(points)))
                 .returningResult(LINE.ID).fetchOne()).get(LINE.ID);
     }
 

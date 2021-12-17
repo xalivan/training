@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class Point  {
-    double x;
-    double y;
+public class Point {
+    private final double x;
+    private final double y;
 
 
     public Point(@JsonProperty("x") double x, @JsonProperty("y") double y) {
