@@ -59,7 +59,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -113,8 +112,8 @@
                     <!-- Generator parameters -->
                     <generator>
                         <database>
-                            <includes>.*</includes>
-                            <excludes>databasechangelog | databasechangeloglock</excludes>
+                            <includes>line|role|user_entity</includes>
+<!--                            <excludes>databasechangelog | databasechangeloglock</excludes>-->
                             <inputSchema>public</inputSchema>
                         </database>
                         <generate>
