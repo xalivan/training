@@ -10,6 +10,8 @@ import java.util.function.Function;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostGisUtils {
+    private static final String POLYGON_GEOMETRY = "POLYGON.GEOMETRY";
+
     //TODO line
     public static final Function<String, Field<Integer>> ST_LENGTH = geometry ->
             DSL.field("ST_length(" + geometry + ")", SQLDataType.INTEGER);
@@ -28,5 +30,5 @@ public class PostGisUtils {
             "ST_MakePolygon( " + ST_GeomFromText + ")";
 
     public static final Function<Double, String> ST_BUFFER = distance ->
-            "ST_Buffer(ST_MakePolygon(POLYGON.GEOMETRY), " + distance + ")";
+            "ST_Buffer(ST_MakePolygon("+ POLYGON_GEOMETRY +"), " + distance + ")";
 }
