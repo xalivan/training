@@ -37,4 +37,13 @@ public class PolygonRepositoryImpl implements PolygonRepository {
         return dsl.select(POLYGON.ID, POLYGON.SQUARE, ST_AS_GEO_JSON.apply(String.valueOf(POLYGON.GEOMETRY)))
                 .from(POLYGON).fetchInto(PolygonEntity.class);
     }
+
+    @Override
+    public int buffer(int id, double distance) {
+        return Objects.requireNonNull(dsl.update(POLYGON)
+                .set(POLYGON.SQUARE, ST_AREA.apply(ST_BUFFER.apply(distance)))
+                .set(POLYGON.GEOMETRY, (Object) field(ST_BUFFER.apply(distance)))
+                .where(POLYGON.ID.eq(id))
+                .returningResult(POLYGON.ID).fetchOne()).get(POLYGON.ID);
+    }
 }

@@ -12,6 +12,8 @@ public interface PolygonService {
     boolean delete(int id);
 
     int save(List<Point> points);
+
+    int buffer(int id, double distance);
 }
 
 

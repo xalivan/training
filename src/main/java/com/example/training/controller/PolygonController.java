@@ -30,4 +30,9 @@ public class PolygonController {
     public ResponseEntity<List<Polygon>> getAll() throws JsonProcessingException {
         return ResponseEntity.ok(service.getAll());
     }
+
+    @PutMapping("{id}/{distance}")
+    public ResponseEntity<Integer> buffer(@PathVariable int id, @PathVariable double distance) {
+        return ResponseEntity.ok(service.buffer(id, distance));
+    }
 }

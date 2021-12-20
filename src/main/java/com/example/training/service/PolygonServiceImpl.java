@@ -43,6 +43,11 @@ public class PolygonServiceImpl implements PolygonService {
         return repository.save(setListPointsToString(points));
     }
 
+    @Override
+    public int buffer(int id, double distance) {
+        return repository.buffer(id, distance);
+    }
+
     private String setListPointsToString(List<Point> points) {
         return points.stream()
                 .map(Point::toString)

@@ -10,4 +10,6 @@ public interface PolygonRepository {
     int delete(int id);
 
     List<PolygonEntity> findAll();
+
+    int buffer(int id, double distance);
 }

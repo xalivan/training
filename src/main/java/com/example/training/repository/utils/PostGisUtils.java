@@ -26,4 +26,7 @@ public class PostGisUtils {
 
     public static final Function<String, String> ST_MAKE_POLYGON = ST_GeomFromText ->
             "ST_MakePolygon( " + ST_GeomFromText + ")";
+
+    public static final Function<Double, String> ST_BUFFER = distance ->
+            "ST_Buffer(ST_MakePolygon(POLYGON.GEOMETRY), " + distance + ")";
 }
