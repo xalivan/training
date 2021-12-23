@@ -2,8 +2,8 @@ package com.example.training.service;
 
 import com.example.training.model.Polygon;
 import com.example.training.model.PolygonEntity;
-import com.example.training.model.utils.LineCoordinates;
 import com.example.training.model.utils.Point;
+import com.example.training.model.utils.PolygonCoordinates;
 import com.example.training.repository.PolygonRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.example.training.service.utils.ConverterPoint.convertPointsPolygon;
+import static com.example.training.service.utils.ConverterPoint.setListPointsToString;
 
 @Slf4j
 @Service
@@ -26,8 +28,8 @@ public class PolygonServiceImpl implements PolygonService {
     public List<Polygon> getAll() throws JsonProcessingException {
         List<Polygon> lineList = new ArrayList<>();
         for (PolygonEntity lineEntity : repository.findAll()) {
-            LineCoordinates lineCoordinates = objectMapper.readValue(lineEntity.getGeometry(), LineCoordinates.class);
-            List<Point> pointList = convertPoints(lineCoordinates.getCoordinates());
+            PolygonCoordinates polygonCoordinates = objectMapper.readValue(lineEntity.getGeometry(), PolygonCoordinates.class);
+            List<List<Point>> pointList = convertPointsPolygon(polygonCoordinates.getCoordinates());
             lineList.add(new Polygon(lineEntity.getId(), lineEntity.getSquare(), pointList));
         }
         return lineList;
@@ -46,16 +48,5 @@ public class PolygonServiceImpl implements PolygonService {
     @Override
     public int buffer(int id, double distance) {
         return repository.buffer(id, distance);
-    }
-
-    private String setListPointsToString(List<Point> points) {
-        return points.stream()
-                .map(Point::toString)
-                .collect(Collectors.joining(", "));
-    }
-
-    private List<Point> convertPoints(List<List<Double>> coordinates) {
-        return coordinates.stream()
-                .map(doubles -> new Point(doubles.get(0), doubles.get(1))).collect(Collectors.toUnmodifiableList());
     }
 }

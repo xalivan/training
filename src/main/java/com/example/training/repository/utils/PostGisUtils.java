@@ -8,27 +8,31 @@ import org.jooq.impl.SQLDataType;
 
 import java.util.function.Function;
 
+import static com.example.training.repository.PolygonRepositoryImpl.BUFFERED_GEOMETRY;
+
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostGisUtils {
-    private static final String POLYGON_GEOMETRY = "POLYGON.GEOMETRY";
+        private static final int SRID = 4326;
 
-    //TODO line
+    //line
     public static final Function<String, Field<Integer>> ST_LENGTH = geometry ->
             DSL.field("ST_length(" + geometry + ")", SQLDataType.INTEGER);
 
     public static final Function<String, String> ST_GEOM_FROM_TEXT = points ->
-            "ST_GeomFromText('LINESTRING(" + points + ")')";
+            "ST_SetSRID(ST_GeomFromText('LINESTRING(" + points + ")')," + SRID + ")";
 
-    public static final Function<String, Field<String>> ST_AS_GEO_JSON = geometry ->
+    public static final Function<Field<Object>, Field<String>> ST_AS_GEO_JSON = geometry ->
             DSL.field("ST_AsGeoJSON(" + geometry + ")", String.class);
 
-    //TODO polygon
+    //polygon
     public static final Function<String, Field<Double>> ST_AREA = polygon ->
             DSL.field("ST_Area(" + polygon + ")", SQLDataType.DOUBLE);
 
-    public static final Function<String, String> ST_MAKE_POLYGON = ST_GeomFromText ->
-            "ST_MakePolygon( " + ST_GeomFromText + ")";
+    public static final Function<String, String> ST_MAKE_POLYGON = geometryAsText ->
+            "ST_MakePolygon( " + geometryAsText + ")";
 
-    public static final Function<Double, String> ST_BUFFER = distance ->
-            "ST_Buffer(ST_MakePolygon("+ POLYGON_GEOMETRY +"), " + distance + ")";
+    public static final Function<Double, Object> ST_BUFFER = distance ->
+            DSL.field("ST_Buffer(" + BUFFERED_GEOMETRY + "," + distance + ")", String.class) ;
+
 }

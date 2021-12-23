@@ -39,7 +39,7 @@ public class LineRepositoryImpl implements LineRepository {
 
     @Override
     public List<LineEntity> findAll() {
-        return dsl.select(LINE.ID, LINE.DATE, LINE.LENGTH, ST_AS_GEO_JSON.apply(String.valueOf(LINE.GEOMETRY)))
+        return dsl.select(LINE.ID, LINE.DATE, LINE.LENGTH, ST_AS_GEO_JSON.apply(LINE.GEOMETRY))
                 .from(LINE).fetchInto(LineEntity.class);
     }
 }

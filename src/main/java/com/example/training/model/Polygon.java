@@ -11,9 +11,9 @@ import java.util.List;
 @Getter
 public class Polygon extends BasePolygon {
 
-    private final List<Point> points;
+    private final  List<List<Point>> points;
 
-    public Polygon(int id, double square, List<Point> points) {
+    public Polygon(int id, double square,  List<List<Point>> points) {
         super(id, square);
         this.points = points;
     }
