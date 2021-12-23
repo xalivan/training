@@ -2,12 +2,12 @@ package com.example.training.repository;
 
 import com.example.training.model.PolygonEntity;
 import lombok.RequiredArgsConstructor;
-import org.jooq.*;
+import org.jooq.CommonTableExpression;
+import org.jooq.DSLContext;
+import org.jooq.Record1;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Objects;
-
 import static com.example.training.jooq.tables.Polygon.POLYGON;
 import static com.example.training.repository.utils.PostGisUtils.*;
 import static org.jooq.impl.DSL.*;
@@ -16,13 +16,15 @@ import static org.jooq.impl.DSL.*;
 @RequiredArgsConstructor
 public class PolygonRepositoryImpl implements PolygonRepository {
     private final DSLContext dsl;
-   public static final String BUFFERED_GEOMETRY = "buffered_geometry";
+    private static final String BUFFERED_GEOMETRY = "buffered_geometry";
 
     @Override
     public int save(String points) {
+        String polygon = ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points));
+
         return Objects.requireNonNull(dsl.insertInto(POLYGON, POLYGON.SQUARE, POLYGON.GEOMETRY)
-                .values(ST_AREA.apply(ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points))),
-                        field(ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points))))
+                .values(ST_AREA.apply(polygon),
+                        field(polygon))
                 .returningResult(POLYGON.ID).fetchOne()).get(POLYGON.ID);
     }
 
@@ -41,14 +43,16 @@ public class PolygonRepositoryImpl implements PolygonRepository {
 
     @Override
     public int buffer(int id, double distance) {
-        CommonTableExpression<Record1<Object>> GEO =
-                name("GEO")
-                .as(select(POLYGON.GEOMETRY.as(BUFFERED_GEOMETRY)).from(POLYGON).where(POLYGON.ID.eq(id)));
+        CommonTableExpression<Record1<String>> GEO = name("GEO")
+                .as((select(ST_BUFFER.apply(POLYGON.GEOMETRY, distance).as(BUFFERED_GEOMETRY)))
+                        .from(POLYGON)
+                        .where(POLYGON.ID.eq(id)));
 
         return Objects.requireNonNull(
-                dsl.with(GEO).update(POLYGON)
-                        .set(POLYGON.SQUARE, ST_AREA.apply(String.valueOf(ST_BUFFER.apply(distance))))
-                        .set(POLYGON.GEOMETRY, ST_BUFFER.apply(distance))
+                dsl.with(GEO)
+                        .update(POLYGON)
+                        .set(POLYGON.SQUARE, ST_AREA.apply(String.valueOf(GEO.field(BUFFERED_GEOMETRY))))
+                        .set(POLYGON.GEOMETRY, GEO.field(BUFFERED_GEOMETRY))
                         .from(GEO)
                         .where(POLYGON.ID.eq(id))
                         .returningResult(POLYGON.ID).fetchOne()).get(POLYGON.ID);

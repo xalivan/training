@@ -6,14 +6,13 @@ import org.jooq.Field;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import static com.example.training.repository.PolygonRepositoryImpl.BUFFERED_GEOMETRY;
-
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostGisUtils {
-        private static final int SRID = 4326;
+    private static final int SRID = 4326; //26918 --4326
+    private static final String JOIN = ", 'join=mitre mitre_limit=20.0'";
 
     //line
     public static final Function<String, Field<Integer>> ST_LENGTH = geometry ->
@@ -30,9 +29,8 @@ public class PostGisUtils {
             DSL.field("ST_Area(" + polygon + ")", SQLDataType.DOUBLE);
 
     public static final Function<String, String> ST_MAKE_POLYGON = geometryAsText ->
-            "ST_MakePolygon( " + geometryAsText + ")";
+            "ST_MakePolygon( " + geometryAsText + ")::geometry";
 
-    public static final Function<Double, Object> ST_BUFFER = distance ->
-            DSL.field("ST_Buffer(" + BUFFERED_GEOMETRY + "," + distance + ")", String.class) ;
-
+    public static final BiFunction<Object, Double, Field<String>> ST_BUFFER = (geom, dist) ->
+            DSL.field("ST_Buffer(" + geom + "::geography," + dist + JOIN + ")::geometry(Polygon," + SRID + ")", String.class);
 }
