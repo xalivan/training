@@ -2,8 +2,9 @@ package com.example.training.repository;
 
 import com.example.training.model.PolygonEntity;
 import lombok.RequiredArgsConstructor;
-import org.jooq.*;
-import org.jooq.impl.DSL;
+import org.jooq.CommonTableExpression;
+import org.jooq.DSLContext;
+import org.jooq.Record1;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,21 +22,19 @@ public class PolygonRepositoryImpl implements PolygonRepository {
 
     @Override
     public int save(String points) {
-        return Objects.requireNonNull(
-                dsl.insertInto(POLYGON, POLYGON.SQUARE, POLYGON.GEOMETRY)
-                        .values(ST_AREA.apply(getStringGeometry(points)), field(getStringGeometry(points), Object.class))
-                        .returningResult(POLYGON.ID).fetchOne()).get(POLYGON.ID);
-    }
-
-    private String getStringGeometry(String points) {
         CommonTableExpression<Record1<String>> geometry_table = name("geometry_table").fields("geometry_column")
                 .as(select(val(ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points)))));
 
-        return Objects.requireNonNull(dsl.with(geometry_table)
+        String geometry = Objects.requireNonNull(dsl.with(geometry_table)
                         .select(geometry_table.field("geometry_column"))
                         .from(geometry_table)
                         .fetchOne())
                 .into(String.class);
+
+        return Objects.requireNonNull(
+                dsl.insertInto(POLYGON, POLYGON.SQUARE, POLYGON.GEOMETRY)
+                        .values(ST_AREA.apply(geometry), field(geometry, Object.class))
+                        .returningResult(POLYGON.ID).fetchOne()).get(POLYGON.ID);
     }
 
     @Override

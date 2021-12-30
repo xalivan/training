@@ -5,11 +5,14 @@ import com.example.training.model.utils.Point;
 import com.example.training.service.PolygonServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("polygon")
 @RequiredArgsConstructor
@@ -27,8 +30,14 @@ public class PolygonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Polygon>> getAll() throws JsonProcessingException {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<Polygon>> getAll() {
+
+        try {
+            return ResponseEntity.ok(service.getAll());
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing to PolygonCoordinates {0} ", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PutMapping("{id}/{distance}")

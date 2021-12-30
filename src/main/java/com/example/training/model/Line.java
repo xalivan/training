@@ -5,7 +5,6 @@ import com.example.training.model.utils.BaseLine;
 import com.example.training.model.utils.Point;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.List;

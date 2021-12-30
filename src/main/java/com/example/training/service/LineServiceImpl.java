@@ -5,6 +5,7 @@ import com.example.training.model.LineEntity;
 import com.example.training.model.utils.LineCoordinates;
 import com.example.training.model.utils.Point;
 import com.example.training.repository.LineRepository;
+import com.example.training.service.utils.ConverterPoint;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.training.service.utils.ConverterPoint.convertPointsToLine;
-import static com.example.training.service.utils.ConverterPoint.setListPointsToString;
 
 @Slf4j
 @Service
@@ -23,14 +22,15 @@ import static com.example.training.service.utils.ConverterPoint.setListPointsToS
 public class LineServiceImpl implements LineService {
     private final LineRepository repository;
     private final ObjectMapper objectMapper;
+    private  final ConverterPoint converterPoint;
 
     @Override
     public List<Line> getAll() throws JsonProcessingException {
         List<Line> lineList = new ArrayList<>();
         for (LineEntity lineEntity : repository.findAll()) {
             LineCoordinates lineCoordinates = objectMapper.readValue(lineEntity.getCoordinates(), LineCoordinates.class);
-            List<Point> pointList = convertPointsToLine(lineCoordinates.getCoordinates());
-            lineList.add(new Line(lineEntity.getId(), lineEntity.getDate(), lineEntity.getLength(), pointList));
+            lineList.add(new Line(lineEntity.getId(), lineEntity.getDate(), lineEntity.getLength(),
+                    converterPoint.convertPointsPolygon(List.of(lineCoordinates.getCoordinates())).get(0)));
         }
         return lineList;
     }
@@ -42,7 +42,7 @@ public class LineServiceImpl implements LineService {
 
     @Override
     public int save(List<Point> points) {
-        return repository.save(setListPointsToString(points));
+        return repository.save(converterPoint.setListPointsToString(points));
     }
 
 }
