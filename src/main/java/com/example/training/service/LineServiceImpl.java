@@ -5,7 +5,7 @@ import com.example.training.model.LineEntity;
 import com.example.training.model.utils.LineCoordinates;
 import com.example.training.model.utils.Point;
 import com.example.training.repository.LineRepository;
-import com.example.training.service.utils.ConverterPoint;
+import com.example.training.service.utils.PointConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.List;
 public class LineServiceImpl implements LineService {
     private final LineRepository repository;
     private final ObjectMapper objectMapper;
-    private  final ConverterPoint converterPoint;
+    private  final PointConverter converterPoint;
 
     @Override
     public List<Line> getAll() throws JsonProcessingException {

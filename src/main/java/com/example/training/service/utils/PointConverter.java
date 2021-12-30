@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Service
-public class ConverterPoint {
+public class PointConverter {
     public  String setListPointsToString(List<Point> points) {
         return points.stream()
                 .map(Point::toString)

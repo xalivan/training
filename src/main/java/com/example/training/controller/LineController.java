@@ -35,7 +35,7 @@ public class LineController {
             return ResponseEntity.ok(service.getAll());
         } catch (JsonProcessingException e) {
             log.error("Error parsing to LineCoordinates {0} ", e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.badRequest().build();
         }
     }
 }

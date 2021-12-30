@@ -31,12 +31,11 @@ public class PolygonController {
 
     @GetMapping
     public ResponseEntity<List<Polygon>> getAll() {
-
         try {
             return ResponseEntity.ok(service.getAll());
         } catch (JsonProcessingException e) {
             log.error("Error parsing to PolygonCoordinates {0} ", e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.badRequest().build();
         }
     }
 
