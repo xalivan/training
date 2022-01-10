@@ -5,7 +5,6 @@ import com.example.training.model.LineEntity;
 import com.example.training.model.utils.LineCoordinates;
 import com.example.training.model.utils.Point;
 import com.example.training.repository.LineRepository;
-import com.example.training.service.utils.PointConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.training.service.utils.PointConverter.convertToPointList;
+import static com.example.training.service.utils.PointConverter.convertToString;
 
 @Slf4j
 @Service
@@ -22,15 +23,12 @@ import java.util.List;
 public class LineServiceImpl implements LineService {
     private final LineRepository repository;
     private final ObjectMapper objectMapper;
-    private  final PointConverter converterPoint;
 
     @Override
     public List<Line> getAll() throws JsonProcessingException {
         List<Line> lineList = new ArrayList<>();
         for (LineEntity lineEntity : repository.findAll()) {
-            LineCoordinates lineCoordinates = objectMapper.readValue(lineEntity.getCoordinates(), LineCoordinates.class);
-            lineList.add(new Line(lineEntity.getId(), lineEntity.getDate(), lineEntity.getLength(),
-                    converterPoint.convertPointsPolygon(List.of(lineCoordinates.getCoordinates())).get(0)));
+            lineList.add(createLine(lineEntity));
         }
         return lineList;
     }
@@ -42,7 +40,17 @@ public class LineServiceImpl implements LineService {
 
     @Override
     public int save(List<Point> points) {
-        return repository.save(converterPoint.setListPointsToString(points));
+        return repository.save(convertToString(points));
     }
 
+    private Line createLine(LineEntity lineEntity) throws JsonProcessingException {
+        return new Line(lineEntity.getId(),
+                lineEntity.getDate(),
+                lineEntity.getLength(),
+                convertToPointList(parse(lineEntity).getCoordinates()));
+    }
+
+    private LineCoordinates parse(LineEntity lineEntity) throws JsonProcessingException {
+        return objectMapper.readValue(lineEntity.getCoordinates(), LineCoordinates.class);
+    }
 }

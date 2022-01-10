@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Objects;
 
-
 import static com.example.training.jooq.tables.Line.LINE;
 import static com.example.training.repository.utils.PostGisUtils.*;
 import static org.jooq.impl.DSL.currentLocalDateTime;

@@ -5,7 +5,6 @@ import com.example.training.model.PolygonEntity;
 import com.example.training.model.utils.Point;
 import com.example.training.model.utils.PolygonCoordinates;
 import com.example.training.repository.PolygonRepository;
-import com.example.training.service.utils.PointConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.training.service.utils.PointConverter.convertToPointList;
+import static com.example.training.service.utils.PointConverter.convertToString;
 
 @Slf4j
 @Service
@@ -22,15 +23,14 @@ import java.util.List;
 public class PolygonServiceImpl implements PolygonService {
     private final PolygonRepository repository;
     private final ObjectMapper objectMapper;
-    private final PointConverter converterPoint;
 
     @Override
     public List<Polygon> getAll() throws JsonProcessingException {
-        List<Polygon> lineList = new ArrayList<>();
-        for (PolygonEntity lineEntity : repository.findAll()) {
-            lineList.add(parseToPolygon(lineEntity));
+        List<Polygon> polygonList = new ArrayList<>();
+        for (PolygonEntity polygonEntity : repository.findAll()) {
+            polygonList.add(createPolygon(polygonEntity));
         }
-        return lineList;
+        return polygonList;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PolygonServiceImpl implements PolygonService {
 
     @Override
     public int save(List<Point> points) {
-        return repository.save(converterPoint.setListPointsToString(points));
+        return repository.save(convertToString(points));
     }
 
     @Override
@@ -48,13 +48,16 @@ public class PolygonServiceImpl implements PolygonService {
         return repository.buffer(id, distance);
     }
 
-    private Polygon parseToPolygon(PolygonEntity lineEntity) throws JsonProcessingException {
-        PolygonCoordinates parse = parseToPolygonCoordinates(lineEntity);
-        List<List<Point>> pointList = converterPoint.convertPointsPolygon(parse.getCoordinates());
+    private Polygon createPolygon(PolygonEntity lineEntity) throws JsonProcessingException {
+        PolygonCoordinates polygonCoordinates = parse(lineEntity);
+        List<List<Point>> pointList = new ArrayList<>();
+        for (int i = 0; i < polygonCoordinates.getCoordinates().size(); i++) {
+            pointList.add(convertToPointList(polygonCoordinates.getCoordinates().get(i)));
+        }
         return new Polygon(lineEntity.getId(), lineEntity.getSquare(), pointList);
     }
 
-    private PolygonCoordinates parseToPolygonCoordinates(PolygonEntity lineEntity) throws JsonProcessingException {
-        return objectMapper.readValue(lineEntity.getGeometry(), PolygonCoordinates.class);
+    private PolygonCoordinates parse(PolygonEntity polygonEntity) throws JsonProcessingException {
+        return objectMapper.readValue(polygonEntity.getGeometry(), PolygonCoordinates.class);
     }
 }

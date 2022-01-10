@@ -10,10 +10,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 public class Polygon extends BasePolygon {
+    private final List<List<Point>> points;
 
-    private final  List<List<Point>> points;
-
-    public Polygon(int id, double square,  List<List<Point>> points) {
+    public Polygon(int id, double square, List<List<Point>> points) {
         super(id, square);
         this.points = points;
     }

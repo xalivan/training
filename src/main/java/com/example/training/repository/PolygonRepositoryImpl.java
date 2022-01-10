@@ -4,11 +4,9 @@ import com.example.training.model.PolygonEntity;
 import lombok.RequiredArgsConstructor;
 import org.jooq.CommonTableExpression;
 import org.jooq.DSLContext;
-import org.jooq.Field;
 import org.jooq.Record1;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,17 +18,18 @@ import static org.jooq.impl.DSL.*;
 @RequiredArgsConstructor
 public class PolygonRepositoryImpl implements PolygonRepository {
     private final DSLContext dsl;
+    private static final String POLYGON_TABLE = "polygon_table";
+    private static final String BUFFERED_GEOMETRY = "buffered_geometry";
+    private static final String POLYGON_VALUE = "polygon_value";
 
     @Override
     public int save(String points) {
-        CommonTableExpression<Record1<String>> geometry_table = name("geometry_table").fields("geometry_column")
-                .as(select(val(ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points)))));
-        String geometry = Objects.requireNonNull(select(geometry_table.field("geometry_column"))
-                        .from(geometry_table)
-                        .fetchAny())
-                .into(String.class);
-        return Objects.requireNonNull(dsl.insertInto(POLYGON, POLYGON.SQUARE, POLYGON.GEOMETRY)
-                        .values(ST_AREA.apply(geometry), field(geometry, Object.class))
+        CommonTableExpression<Record1<Object>> polygonTable = name(POLYGON_TABLE)
+                .as(select(ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points)).as(POLYGON_VALUE)));
+
+        return Objects.requireNonNull(dsl.with(polygonTable)
+                        .insertInto(POLYGON, POLYGON.SQUARE, POLYGON.GEOMETRY)
+                        .select(select(ST_AREA.apply(POLYGON_VALUE), field(POLYGON_VALUE)).from(polygonTable))
                         .returningResult(POLYGON.ID)
                         .fetchOne())
                 .into(int.class);
@@ -51,17 +50,17 @@ public class PolygonRepositoryImpl implements PolygonRepository {
 
     @Override
     public int buffer(int id, double distance) {
-        CommonTableExpression<Record1<String>> geometry_table = name("geometry_table")
-                .as((select(ST_BUFFER.apply(POLYGON.GEOMETRY, distance).as("buffered_geometry")))
+        CommonTableExpression<Record1<String>> polygonTable = name(POLYGON_TABLE)
+                .as((select(ST_BUFFER.apply(POLYGON.GEOMETRY, distance).as(BUFFERED_GEOMETRY)))
                         .from(POLYGON)
                         .where(POLYGON.ID.eq(id)));
 
         return Objects.requireNonNull(
-                dsl.with(geometry_table)
+                dsl.with(polygonTable)
                         .update(POLYGON)
-                        .set(POLYGON.SQUARE, ST_AREA.apply(String.valueOf(geometry_table.field("buffered_geometry"))))
-                        .set(POLYGON.GEOMETRY, geometry_table.field("buffered_geometry"))
-                        .from(geometry_table)
+                        .set(POLYGON.SQUARE, ST_AREA.apply(String.valueOf(polygonTable.field(BUFFERED_GEOMETRY))))
+                        .set(POLYGON.GEOMETRY, polygonTable.field(BUFFERED_GEOMETRY))
+                        .from(polygonTable)
                         .where(POLYGON.ID.eq(id))
                         .returningResult(POLYGON.ID).fetchOne()).get(POLYGON.ID);
     }
