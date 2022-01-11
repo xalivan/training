@@ -1,17 +1,16 @@
 package com.example.training.controller;
 
 import com.example.training.model.Line;
-import com.example.training.model.Polygon;
 import com.example.training.model.utils.Point;
 import com.example.training.service.LineServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("line")
@@ -30,11 +29,11 @@ public class LineController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Line>> getAll()  {
+    public ResponseEntity<List<Line>> getAll() {
         try {
             return ResponseEntity.ok(service.getAll());
         } catch (JsonProcessingException e) {
-            log.error("Error parsing to LineCoordinates {0} ", e);
+            log.error("Error parsing to LineCoordinates ", e);
             return ResponseEntity.badRequest().build();
         }
     }

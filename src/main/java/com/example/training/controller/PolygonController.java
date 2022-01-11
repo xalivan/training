@@ -1,12 +1,12 @@
 package com.example.training.controller;
 
 import com.example.training.model.Polygon;
+import com.example.training.model.PolygonEntity;
 import com.example.training.model.utils.Point;
 import com.example.training.service.PolygonServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +40,7 @@ public class PolygonController {
     }
 
     @PutMapping("{id}/{distance}")
-    public ResponseEntity<Integer> buffer(@PathVariable int id, @PathVariable double distance) {
+    public ResponseEntity<PolygonEntity> buffer(@PathVariable int id, @PathVariable double distance) {
         return ResponseEntity.ok(service.buffer(id, distance));
     }
 }

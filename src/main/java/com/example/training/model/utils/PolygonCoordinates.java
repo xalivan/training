@@ -11,7 +11,7 @@ import java.util.List;
 public class PolygonCoordinates {
     List<List<List<Double>>> coordinates;
 
-    public PolygonCoordinates(@JsonProperty("coordinates")  List<List<List<Double>>> coordinates) {
+    public PolygonCoordinates(@JsonProperty("coordinates") List<List<List<Double>>> coordinates) {
         this.coordinates = coordinates;
     }
 }

@@ -11,5 +11,5 @@ public interface PolygonRepository {
 
     List<PolygonEntity> findAll();
 
-    int buffer(int id, double distance);
+    PolygonEntity buffer(int id, double distance);
 }

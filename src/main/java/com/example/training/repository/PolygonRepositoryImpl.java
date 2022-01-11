@@ -17,14 +17,14 @@ import static org.jooq.impl.DSL.*;
 @Repository
 @RequiredArgsConstructor
 public class PolygonRepositoryImpl implements PolygonRepository {
-    private final DSLContext dsl;
     private static final String POLYGON_TABLE = "polygon_table";
     private static final String BUFFERED_GEOMETRY = "buffered_geometry";
     private static final String POLYGON_VALUE = "polygon_value";
+    private final DSLContext dsl;
 
     @Override
     public int save(String points) {
-        CommonTableExpression<Record1<Object>> polygonTable = name(POLYGON_TABLE)
+        CommonTableExpression<Record1<String>> polygonTable = name(POLYGON_TABLE)
                 .as(select(ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points)).as(POLYGON_VALUE)));
 
         return Objects.requireNonNull(dsl.with(polygonTable)
@@ -49,19 +49,18 @@ public class PolygonRepositoryImpl implements PolygonRepository {
     }
 
     @Override
-    public int buffer(int id, double distance) {
+    public PolygonEntity buffer(int id, double distance) {
         CommonTableExpression<Record1<String>> polygonTable = name(POLYGON_TABLE)
                 .as((select(ST_BUFFER.apply(POLYGON.GEOMETRY, distance).as(BUFFERED_GEOMETRY)))
                         .from(POLYGON)
                         .where(POLYGON.ID.eq(id)));
-
-        return Objects.requireNonNull(
-                dsl.with(polygonTable)
-                        .update(POLYGON)
-                        .set(POLYGON.SQUARE, ST_AREA.apply(String.valueOf(polygonTable.field(BUFFERED_GEOMETRY))))
-                        .set(POLYGON.GEOMETRY, polygonTable.field(BUFFERED_GEOMETRY))
-                        .from(polygonTable)
-                        .where(POLYGON.ID.eq(id))
-                        .returningResult(POLYGON.ID).fetchOne()).get(POLYGON.ID);
+        return Objects.requireNonNull(dsl.with(polygonTable)
+                .update(POLYGON)
+                .set(POLYGON.SQUARE, ST_AREA.apply(polygonTable.field(BUFFERED_GEOMETRY)))
+                .set(POLYGON.GEOMETRY, polygonTable.field(BUFFERED_GEOMETRY))
+                .from(polygonTable)
+                .where(POLYGON.ID.eq(id))
+                .returningResult(POLYGON.ID, POLYGON.SQUARE, POLYGON.GEOMETRY).fetchOne()).into(PolygonEntity.class);
     }
 }
+
