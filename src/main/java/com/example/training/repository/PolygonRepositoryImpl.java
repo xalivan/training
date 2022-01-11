@@ -1,5 +1,6 @@
 package com.example.training.repository;
 
+import com.example.training.model.Polygon;
 import com.example.training.model.PolygonEntity;
 import lombok.RequiredArgsConstructor;
 import org.jooq.CommonTableExpression;
@@ -23,10 +24,9 @@ public class PolygonRepositoryImpl implements PolygonRepository {
     private final DSLContext dsl;
 
     @Override
-    public int save(String points) {
+    public int save(Polygon points) {
         CommonTableExpression<Record1<String>> polygonTable = name(POLYGON_TABLE)
-                .as(select(ST_MAKE_POLYGON.apply(ST_GEOM_FROM_TEXT.apply(points)).as(POLYGON_VALUE)));
-
+                .as(select(ST_GEOM.apply(points.toWKTString()).as(POLYGON_VALUE)));
         return Objects.requireNonNull(dsl.with(polygonTable)
                         .insertInto(POLYGON, POLYGON.SQUARE, POLYGON.GEOMETRY)
                         .select(select(ST_AREA.apply(POLYGON_VALUE), field(POLYGON_VALUE)).from(polygonTable))
@@ -55,12 +55,13 @@ public class PolygonRepositoryImpl implements PolygonRepository {
                         .from(POLYGON)
                         .where(POLYGON.ID.eq(id)));
         return Objects.requireNonNull(dsl.with(polygonTable)
-                .update(POLYGON)
-                .set(POLYGON.SQUARE, ST_AREA.apply(polygonTable.field(BUFFERED_GEOMETRY)))
-                .set(POLYGON.GEOMETRY, polygonTable.field(BUFFERED_GEOMETRY))
-                .from(polygonTable)
-                .where(POLYGON.ID.eq(id))
-                .returningResult(POLYGON.ID, POLYGON.SQUARE, POLYGON.GEOMETRY).fetchOne()).into(PolygonEntity.class);
+                        .update(POLYGON)
+                        .set(POLYGON.SQUARE, ST_AREA.apply(BUFFERED_GEOMETRY))
+                        .set(POLYGON.GEOMETRY, BUFFERED_GEOMETRY)
+                        .from(polygonTable)
+                        .where(POLYGON.ID.eq(id))
+                        .returningResult(POLYGON.ID, POLYGON.SQUARE, ST_AS_GEO_JSON.apply(POLYGON.GEOMETRY))
+                        .fetchOne())
+                .into(PolygonEntity.class);
     }
 }
-

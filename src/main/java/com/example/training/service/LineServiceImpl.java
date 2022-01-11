@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.training.service.utils.PointConverter.convertToPointList;
+import static com.example.training.service.utils.PointConverter.convertToPoints;
 import static com.example.training.service.utils.PointConverter.convertToString;
 
 @Slf4j
@@ -47,7 +47,7 @@ public class LineServiceImpl implements LineService {
         return new Line(lineEntity.getId(),
                 lineEntity.getDate(),
                 lineEntity.getLength(),
-                convertToPointList(parse(lineEntity).getCoordinates()));
+                convertToPoints(parse(lineEntity).getCoordinates()));
     }
 
     private LineCoordinates parse(LineEntity lineEntity) throws JsonProcessingException {

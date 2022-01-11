@@ -20,14 +20,14 @@ public class PostGisUtils {
     public static final Function<String, String> ST_GEOM_FROM_TEXT = points ->
             "ST_GeomFromText('LINESTRING(" + points + ")')";
 
+    public static final Function<String, Field<String>> ST_GEOM = points ->
+            field("ST_GeomFromText('" + points + "')", String.class);
+
     public static final Function<Field<Object>, Field<String>> ST_AS_GEO_JSON = geometry ->
             field("ST_AsGeoJSON(" + geometry + ")", String.class);
 
-    public static final Function<Object, Field<Double>> ST_AREA = polygon ->
+    public static final Function<String, Field<Double>> ST_AREA = polygon ->
             field("ST_Area(" + polygon + ")", Double.class);
-
-    public static final Function<String, Field<String>> ST_MAKE_POLYGON = geometryAsText ->
-            field("ST_MakePolygon( " + geometryAsText + ")", String.class);
 
     public static final BiFunction<Object, Double, Field<String>> ST_BUFFER = (geom, dist) ->
             field("ST_Buffer(" + geom + "::geography," + dist + BUFFER_JOIN + ")::geometry", String.class);

@@ -2,10 +2,12 @@ package com.example.training.model.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class BasePolygon {
-    private final int id;
-    private final double square;
+    private int id;
+    private double square;
 }

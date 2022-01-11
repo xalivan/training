@@ -1,7 +1,6 @@
 package com.example.training.service;
 
 import com.example.training.model.Polygon;
-import com.example.training.model.PolygonEntity;
 import com.example.training.model.utils.Point;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -12,9 +11,9 @@ public interface PolygonService {
 
     boolean delete(int id);
 
-    int save(List<Point> points);
+    int save(List<List<Point>> points);
 
-    PolygonEntity buffer(int id, double distance);
+    Polygon buffer(int id, double distance) throws JsonProcessingException;
 }
 
 

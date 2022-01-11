@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.training.service.utils.PointConverter.convertToString;
 
 @Slf4j
 @Service
@@ -43,18 +42,20 @@ public class PolygonServiceImpl implements PolygonService {
     }
 
     @Override
-    public int save(List<Point> points) {
-        return repository.save(convertToString(points));
+    public int save(List<List<Point>> points) {
+        return repository.save(new Polygon(points));
     }
 
     @Override
-    public PolygonEntity buffer(int id, double distance) {
-        return repository.buffer(id, distance);
+    public Polygon buffer(int id, double distance) throws JsonProcessingException {
+        PolygonEntity polygonEntity = repository.buffer(id, distance);
+        PolygonCoordinates polygonCoordinates = parse(polygonEntity);
+        return new Polygon(polygonEntity.getId(), polygonEntity.getSquare(), getPoints(polygonCoordinates.getCoordinates()));
     }
 
     private List<List<Point>> getPoints(List<List<List<Double>>> coordinates) {
         return coordinates.stream()
-                .map(PointConverter::convertToPointList)
+                .map(PointConverter::convertToPoints)
                 .collect(Collectors.toUnmodifiableList());
     }
 
