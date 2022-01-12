@@ -40,7 +40,11 @@ public class LineServiceImpl implements LineService {
 
     @Override
     public int save(List<Point> points) {
-        return repository.save(convertToString(points));
+        return repository.save(concatLinestring(convertToString(points)));
+    }
+
+    private String concatLinestring(String points) {
+        return "'LINESTRING(" + points + ")'";
     }
 
     private Line createLine(LineEntity lineEntity) throws JsonProcessingException {

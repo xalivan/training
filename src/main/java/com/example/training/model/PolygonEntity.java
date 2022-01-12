@@ -7,7 +7,6 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 public class PolygonEntity extends BasePolygon {
-
     private final String geometry;
 
     public PolygonEntity(int id, double square, String geometry) {

@@ -17,7 +17,7 @@ public class PointConverter {
     public static List<Point> convertToPoints(List<List<Double>> coordinates) {
         return coordinates.stream()
                 .filter(doubles -> doubles.size() == 2)
-                .map(doubles -> new Point(doubles.get(0),
-                        doubles.get(1))).collect(toUnmodifiableList());
+                .map(doubles -> new Point(doubles.get(0), doubles.get(1)))
+                .collect(toUnmodifiableList());
     }
 }

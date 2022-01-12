@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,7 +42,7 @@ public class PolygonServiceImpl implements PolygonService {
 
     @Override
     public int save(List<List<Point>> points) {
-        return repository.save(new Polygon(points));
+        return repository.save(toWKTString(points));
     }
 
     @Override
@@ -61,5 +60,23 @@ public class PolygonServiceImpl implements PolygonService {
 
     private PolygonCoordinates parse(PolygonEntity polygonEntity) throws JsonProcessingException {
         return objectMapper.readValue(polygonEntity.getGeometry(), PolygonCoordinates.class);
+    }
+
+    private String toWKTString(List<List<Point>> points) {
+        List<String> listPoints = points.stream()
+                .map(this::convertToString)
+                .collect(Collectors.toList());
+        return concatPolygon(listPoints);
+    }
+
+    private String convertToString(List<Point> points) {
+        return points.stream()
+                .map(Point::toString)
+                .collect(Collectors.joining(", ", "(", ")"));
+    }
+
+    private String concatPolygon(List<String> stringList) {
+        return stringList.stream()
+                .collect(Collectors.joining(",", "'POLYGON(", ")'"));
     }
 }
