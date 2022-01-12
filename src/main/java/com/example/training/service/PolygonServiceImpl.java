@@ -63,20 +63,14 @@ public class PolygonServiceImpl implements PolygonService {
     }
 
     private String toWKTString(List<List<Point>> points) {
-        List<String> listPoints = points.stream()
+       return points.stream()
                 .map(this::convertToString)
-                .collect(Collectors.toList());
-        return concatPolygon(listPoints);
+                .collect(Collectors.joining(",", "POLYGON(", ")"));
     }
 
     private String convertToString(List<Point> points) {
         return points.stream()
                 .map(Point::toString)
                 .collect(Collectors.joining(", ", "(", ")"));
-    }
-
-    private String concatPolygon(List<String> stringList) {
-        return stringList.stream()
-                .collect(Collectors.joining(",", "'POLYGON(", ")'"));
     }
 }

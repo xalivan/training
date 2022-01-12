@@ -18,7 +18,7 @@ public class PostGisUtils {
             field("ST_length(" + geometry + ")", SQLDataType.INTEGER);
 
     public static final Function<String, String> ST_GEOM_FROM_TEXT = geometry ->
-            "ST_GeomFromText(" + geometry + ")";
+            "ST_GeomFromText('" + geometry + "')";
 
     public static final Function<Field<Object>, Field<String>> ST_AS_GEO_JSON = geometry ->
             field("ST_AsGeoJSON(" + geometry + ")", String.class);

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 public class PointConverter {
-    public static String convertToString(List<Point> points) {
+    public static String convertToCommaSeparatedString(List<Point> points) {
         return points.stream()
                 .map(Point::toString)
                 .collect(Collectors.joining(", "));

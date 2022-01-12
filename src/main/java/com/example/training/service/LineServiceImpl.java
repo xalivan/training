@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.training.service.utils.PointConverter.convertToPoints;
-import static com.example.training.service.utils.PointConverter.convertToString;
+import static com.example.training.service.utils.PointConverter.convertToCommaSeparatedString;
 
 @Slf4j
 @Service
@@ -40,11 +40,11 @@ public class LineServiceImpl implements LineService {
 
     @Override
     public int save(List<Point> points) {
-        return repository.save(concatLinestring(convertToString(points)));
+        return repository.save(concatLinestring(convertToCommaSeparatedString(points)));
     }
 
     private String concatLinestring(String points) {
-        return "'LINESTRING(" + points + ")'";
+        return "LINESTRING(" + points + ")";
     }
 
     private Line createLine(LineEntity lineEntity) throws JsonProcessingException {
