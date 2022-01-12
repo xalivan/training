@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.training.service.utils.PointConverter.convertToCommaSeparatedString;
+import static java.text.MessageFormat.format;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -62,15 +65,9 @@ public class PolygonServiceImpl implements PolygonService {
         return objectMapper.readValue(polygonEntity.getGeometry(), PolygonCoordinates.class);
     }
 
-    private String toWKTString(List<List<Point>> points) {
-       return points.stream()
-                .map(this::convertToString)
-                .collect(Collectors.joining(",", "POLYGON(", ")"));
-    }
-
-    private String convertToString(List<Point> points) {
-        return points.stream()
-                .map(Point::toString)
-                .collect(Collectors.joining(", ", "(", ")"));
+    private String toWKTString(List<List<Point>> pointList) {
+        return pointList.stream()
+                .map(points -> format("({0})", convertToCommaSeparatedString(points)))
+                .collect(Collectors.joining(", ", "POLYGON(", ")"));
     }
 }
