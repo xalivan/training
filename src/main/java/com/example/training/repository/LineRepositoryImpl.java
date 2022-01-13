@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Objects;
 
-
 import static com.example.training.jooq.tables.Line.LINE;
 import static com.example.training.repository.utils.PostGisUtils.*;
 import static org.jooq.impl.DSL.currentLocalDateTime;
@@ -39,7 +38,7 @@ public class LineRepositoryImpl implements LineRepository {
 
     @Override
     public List<LineEntity> findAll() {
-        return dsl.select(LINE.ID, LINE.DATE, LINE.LENGTH, ST_AS_GEO_JSON.apply(String.valueOf(LINE.GEOMETRY)))
+        return dsl.select(LINE.ID, LINE.DATE, LINE.LENGTH, ST_AS_GEO_JSON.apply(LINE.GEOMETRY))
                 .from(LINE).fetchInto(LineEntity.class);
     }
 }

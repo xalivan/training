@@ -1,8 +1,8 @@
 package com.example.training.controller;
 
-import com.example.training.model.Line;
+import com.example.training.model.Polygon;
 import com.example.training.model.utils.Point;
-import com.example.training.service.LineServiceImpl;
+import com.example.training.service.PolygonServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +13,13 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("line")
+@RequestMapping("polygon")
 @RequiredArgsConstructor
-public class LineController {
-    private final LineServiceImpl service;
+public class PolygonController {
+    private final PolygonServiceImpl service;
 
     @PutMapping
-    public ResponseEntity<Integer> save(@RequestBody List<Point> points) {
+    public ResponseEntity<Integer> save(@RequestBody List<List<Point>> points) {
         return ResponseEntity.ok(service.save(points));
     }
 
@@ -29,14 +29,22 @@ public class LineController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Line>> getAll() {
+    public ResponseEntity<List<Polygon>> getAll() {
         try {
             return ResponseEntity.ok(service.getAll());
         } catch (JsonProcessingException e) {
-            log.error("Error parsing to LineCoordinates ", e);
+            log.error("Error parsing to PolygonCoordinates ", e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("{id}/{distance}")
+    public ResponseEntity<Polygon> buffer(@PathVariable int id, @PathVariable double distance)  {
+        try {
+            return ResponseEntity.ok(service.buffer(id, distance));
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing to PolygonCoordinates ", e);
             return ResponseEntity.badRequest().build();
         }
     }
 }
-
-

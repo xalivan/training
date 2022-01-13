@@ -5,6 +5,7 @@ package com.example.training.jooq;
 
 
 import com.example.training.jooq.tables.Line;
+import com.example.training.jooq.tables.Polygon;
 import com.example.training.jooq.tables.Role;
 import com.example.training.jooq.tables.UserEntity;
 
@@ -19,6 +20,11 @@ public class Tables {
      * The table <code>public.line</code>.
      */
     public static final Line LINE = Line.LINE;
+
+    /**
+     * The table <code>public.polygon</code>.
+     */
+    public static final Polygon POLYGON = Polygon.POLYGON;
 
     /**
      * The table <code>public.role</code>.
