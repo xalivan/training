@@ -1,5 +1,6 @@
 package com.example.training.redis;
 
+import com.example.training.redis.model.UserCounter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig {
     private final String host;
     private final int port;
-
     public RedisConfig(@Value("${spring.redis.host}") String host, @Value("${spring.redis.port}") int port) {
         this.host = host;
         this.port = port;
