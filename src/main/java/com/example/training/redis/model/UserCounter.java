@@ -1,6 +1,7 @@
 package com.example.training.redis.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.io.Serializable;
 

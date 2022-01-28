@@ -17,11 +17,12 @@ public class UserCounterRepositoryImpl implements UserCounterRepository {
 
     @Override
     public Optional<UserCounter> findByUsername(String httpMethod, String username) {
-        return Optional.ofNullable(hashOperations.get(httpMethod, username));
+        return Optional.ofNullable(Optional.ofNullable(hashOperations.get(httpMethod, username))
+                .orElseThrow(IllegalArgumentException::new));
     }
 
     @Override
-    public void save(String http, String username, UserCounter userCounter) {
-        hashOperations.put(http, username, userCounter);
+    public void save(String httpMethod, String username, UserCounter userCounter) {
+        hashOperations.put(httpMethod, username, userCounter);
     }
 }
