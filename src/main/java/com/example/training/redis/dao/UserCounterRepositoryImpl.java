@@ -17,8 +17,7 @@ public class UserCounterRepositoryImpl implements UserCounterRepository {
 
     @Override
     public Optional<UserCounter> findByUsername(String httpMethod, String username) {
-        return Optional.ofNullable(Optional.ofNullable(hashOperations.get(httpMethod, username))
-                .orElseThrow(IllegalArgumentException::new));
+        return Optional.ofNullable(hashOperations.get(httpMethod, username));
     }
 
     @Override

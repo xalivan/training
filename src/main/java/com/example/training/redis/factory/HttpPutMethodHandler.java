@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class PutMethod implements HttpMethodHandler {
+public class HttpPutMethodHandler implements HttpMethodHandler {
     private final int limit;
 
-    public PutMethod(@Value("${request.limit.put}") int limit) {
+    public HttpPutMethodHandler(@Value("${request.limit.put}") int limit) {
         this.limit = limit;
     }
 
@@ -19,7 +19,7 @@ public class PutMethod implements HttpMethodHandler {
     }
 
     @Override
-    public boolean isLimitReached(int counter) {
+    public boolean isCounterLower(int counter) {
         return limit > counter;
     }
 }

@@ -6,7 +6,9 @@ import org.springframework.http.HttpMethod;
 import java.util.Optional;
 
 public interface UserCounterService {
-    void saveOrIncrement(HttpMethod httpMethod, String username);
+    void save(HttpMethod httpMethod, String username);
+
+    void update(HttpMethod httpMethod, String username, Optional<UserCounter> userCounter);
 
     Optional<UserCounter> getUserCounter(HttpMethod httpMethod, String userName);
 

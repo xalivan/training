@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
-@Configuration
+@Component
 @AllArgsConstructor
 public class FilterRequest extends OncePerRequestFilter {
     private final UserCounterService userCounterService;
@@ -33,16 +33,19 @@ public class FilterRequest extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if (request.getMethod().equals(HttpMethod.GET.name()) || request.getMethod().equals(HttpMethod.PUT.name())) {
-            String userNameFromContext = SecurityContextHolder.getContext().getAuthentication().getName();
-            HttpMethod requestMethod = HttpMethod.valueOf(request.getMethod());
-            Optional<UserCounter> userCounter = userCounterService.getUserCounter(requestMethod, userNameFromContext);
-            if (userCounter.isEmpty()
-                    || isTimeExpired(userCounter.get().getTimeExpired())
-                    || httpMethodFactory.getHandler(requestMethod).isLimitReached(userCounter.get().getCounter())) {
-                userCounterService.saveOrIncrement(requestMethod, userNameFromContext);
+
+        HttpMethod requestMethod = HttpMethod.valueOf(request.getMethod());
+        String userNameFromContext = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserCounter> findUserCounter = userCounterService.getUserCounter(requestMethod, userNameFromContext);
+
+        if (requestMethod.equals(HttpMethod.GET) || requestMethod.equals(HttpMethod.PUT)) {
+            if (findUserCounter.isEmpty() || isTimeExpired(findUserCounter.get().getTimeExpired())) {
+                userCounterService.save(requestMethod, userNameFromContext);
                 filterChain.doFilter(request, response);
-            } else {
+            } else if (httpMethodFactory.getHandler(requestMethod).isCounterLower(findUserCounter.get().getCounter())) {
+                userCounterService.update(requestMethod, userNameFromContext, findUserCounter);
+                filterChain.doFilter(request, response);
+            } else  {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
         } else {

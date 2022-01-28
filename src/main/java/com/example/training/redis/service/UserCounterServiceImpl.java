@@ -25,13 +25,15 @@ public class UserCounterServiceImpl implements UserCounterService {
     }
 
     @Override
-    public void saveOrIncrement(HttpMethod httpMethod, String username) {
-        Optional<UserCounter> userCounter = userCounterRepository.findByUsername(httpMethod.name(), username);
-        if (userCounter.isEmpty()) {
-            long expirationTime = ZonedDateTime.now(ZoneOffset.UTC).toInstant().toEpochMilli() + timeExpiredInMinutes * 60 * 1000; // minute convert to milliseconds
-            userCounterRepository.save(httpMethod.name(), username, new UserCounter(1, expirationTime));
-            log.info("SAVE {},{},{}", httpMethod, username, expirationTime);
-        } else {
+    public void save(HttpMethod httpMethod, String username) {
+        long expirationTime = ZonedDateTime.now(ZoneOffset.UTC).toInstant().toEpochMilli() + timeExpiredInMinutes * 60 * 1000; // minute convert to milliseconds
+        userCounterRepository.save(httpMethod.name(), username, new UserCounter(1, expirationTime));
+        log.info("SAVE {},{},{}", httpMethod, username, expirationTime);
+    }
+
+    @Override
+    public void update(HttpMethod httpMethod, String username, Optional<UserCounter> userCounter) {
+        if (userCounter.isPresent()) {
             int counter = userCounter.get().getCounter();
             long timeToExpired = userCounter.get().getTimeExpired();
             userCounterRepository.save(httpMethod.name(), username, new UserCounter(++counter, timeToExpired));

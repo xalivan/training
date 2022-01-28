@@ -5,10 +5,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GetMethod implements HttpMethodHandler {
+public class HttpGetMethodHandler implements HttpMethodHandler {
     private final int limit;
 
-    public GetMethod(@Value("${request.limit.get}") int limit) {
+    public HttpGetMethodHandler(@Value("${request.limit.get}") int limit) {
         this.limit = limit;
     }
 
@@ -18,7 +18,7 @@ public class GetMethod implements HttpMethodHandler {
     }
 
     @Override
-    public boolean isLimitReached(int counter) {
+    public boolean isCounterLower(int counter) {
         return limit > counter;
     }
 }
