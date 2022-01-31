@@ -1,18 +1,24 @@
 package com.example.training.security;
 
 import com.example.training.model.Role;
+import com.example.training.redis.FilterRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.context.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final FilterRequest filterRequest;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -24,7 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/users", "/line").hasAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().permitAll()
+                .addFilterAfter(filterRequest, BasicAuthenticationFilter.class)
+                .formLogin()
+                .permitAll()
                 .and()
                 .httpBasic()
                 .and()

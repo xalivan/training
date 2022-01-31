@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.training.service.utils.PointConverter.convertToPoints;
 import static com.example.training.service.utils.PointConverter.convertToCommaSeparatedString;
+import static com.example.training.service.utils.PointConverter.convertToPoints;
 
 @Slf4j
 @Service

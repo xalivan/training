@@ -1,13 +1,18 @@
 version: '3'
-
 services:
   db:
-    image: postgres
-    ports:
-      - "5435:5432"
-    restart: always
-
+    image:  kartoza/postgis:12.0
+    container_name: db
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 1111
-      POSTGRES_DB: test
+      POSTGRES_DB: gis
+    ports:
+      - "5432:5432"
+    restart: always
+
+  redis-db:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
