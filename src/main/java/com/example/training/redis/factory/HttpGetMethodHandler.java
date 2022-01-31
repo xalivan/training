@@ -5,7 +5,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HttpGetMethodHandler extends CounterLimit implements HttpMethodHandler {
+public class HttpGetMethodHandler extends AbstractHttpMethodHandler {
 
     public HttpGetMethodHandler(@Value("${request.limit.get}") int limit) {
         super(limit);
