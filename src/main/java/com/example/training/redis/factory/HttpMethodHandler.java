@@ -5,5 +5,5 @@ import org.springframework.http.HttpMethod;
 public interface HttpMethodHandler {
     HttpMethod getType();
 
-    boolean isCounterLower(int counter);
+    boolean isCounterLowerThanAllowedLimit(int counter);
 }

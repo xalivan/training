@@ -32,17 +32,15 @@ public class UserCounterServiceImpl implements UserCounterService {
     }
 
     @Override
-    public void update(HttpMethod httpMethod, String username, Optional<UserCounter> userCounter) {
-        if (userCounter.isPresent()) {
-            int counter = userCounter.get().getCounter();
-            long timeToExpired = userCounter.get().getTimeExpired();
-            userCounterRepository.save(httpMethod.name(), username, new UserCounter(++counter, timeToExpired));
-            log.info("UPDATE {},{},{}", httpMethod.name(), username, counter);
-        }
+    public void incrementAndUpdate(HttpMethod httpMethod, String username, UserCounter userCounter) {
+        int counter = userCounter.getCounter();
+        long timeToExpired = userCounter.getTimeExpired();
+        userCounterRepository.save(httpMethod.name(), username, new UserCounter(++counter, timeToExpired));
+        log.info("UPDATE {},{},{}", httpMethod.name(), username, counter);
     }
 
     @Override
-    public Optional<UserCounter> getUserCounter(HttpMethod httpMethod, String userName) {
+    public Optional<UserCounter> findUserCounter(HttpMethod httpMethod, String userName) {
         return userCounterRepository.findByUsername(httpMethod.name(), userName);
     }
 }

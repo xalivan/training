@@ -6,7 +6,6 @@ import com.example.training.redis.service.UserCounterService;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-@Slf4j
 @EqualsAndHashCode(callSuper = true)
 @Component
 @AllArgsConstructor
@@ -33,24 +31,19 @@ public class FilterRequest extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-
         HttpMethod requestMethod = HttpMethod.valueOf(request.getMethod());
-        String userNameFromContext = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserCounter> findUserCounter = userCounterService.getUserCounter(requestMethod, userNameFromContext);
-
-        if (requestMethod.equals(HttpMethod.GET) || requestMethod.equals(HttpMethod.PUT)) {
-            if (findUserCounter.isEmpty() || isTimeExpired(findUserCounter.get().getTimeExpired())) {
+        if (HttpMethod.GET.equals(requestMethod) || HttpMethod.PUT.equals(requestMethod)) {
+            String userNameFromContext = SecurityContextHolder.getContext().getAuthentication().getName();
+            Optional<UserCounter> userCounter = userCounterService.findUserCounter(requestMethod, userNameFromContext);
+            if (userCounter.isEmpty() || isTimeExpired(userCounter.get().getTimeExpired())) {
                 userCounterService.save(requestMethod, userNameFromContext);
-                filterChain.doFilter(request, response);
-            } else if (httpMethodFactory.getHandler(requestMethod).isCounterLower(findUserCounter.get().getCounter())) {
-                userCounterService.update(requestMethod, userNameFromContext, findUserCounter);
-                filterChain.doFilter(request, response);
-            } else  {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            } else if (httpMethodFactory.getHandler(requestMethod).isCounterLowerThanAllowedLimit(userCounter.get().getCounter())) {
+                userCounterService.incrementAndUpdate(requestMethod, userNameFromContext, userCounter.get());
+            } else {
+                SecurityContextHolder.clearContext();
             }
-        } else {
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 
     private boolean isTimeExpired(long userTime) {

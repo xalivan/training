@@ -8,8 +8,7 @@ import java.util.Optional;
 public interface UserCounterService {
     void save(HttpMethod httpMethod, String username);
 
-    void update(HttpMethod httpMethod, String username, Optional<UserCounter> userCounter);
+    void incrementAndUpdate(HttpMethod httpMethod, String username, UserCounter userCounter);
 
-    Optional<UserCounter> getUserCounter(HttpMethod httpMethod, String userName);
-
+    Optional<UserCounter> findUserCounter(HttpMethod httpMethod, String userName);
 }

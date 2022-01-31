@@ -8,13 +8,12 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
 @Component
 public class HttpMethodFactoryImpl implements HttpMethodFactory {
     private final Map<HttpMethod, HttpMethodHandler> httpMethodHandlerMapping;
 
     public HttpMethodFactoryImpl(List<HttpMethodHandler> services) {
-        this.httpMethodHandlerMapping = putHttpMethodHandlerMapping(services);
+        this.httpMethodHandlerMapping = buildHttpMethodHandlerMapping(services);
     }
 
     @Override
@@ -22,7 +21,7 @@ public class HttpMethodFactoryImpl implements HttpMethodFactory {
         return httpMethodHandlerMapping.get(httpMethod);
     }
 
-    private Map<HttpMethod, HttpMethodHandler> putHttpMethodHandlerMapping(List<HttpMethodHandler> services) {
+    private Map<HttpMethod, HttpMethodHandler> buildHttpMethodHandlerMapping(List<HttpMethodHandler> services) {
         return services.stream()
                 .collect(Collectors.toUnmodifiableMap(HttpMethodHandler::getType, Function.identity()));
     }
