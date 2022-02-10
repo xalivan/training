@@ -2,8 +2,10 @@ package com.example.training.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public interface AmazonS3Service {
-    void uploadFile(MultipartFile file);
+import java.io.IOException;
 
-    byte[] downloadFile(final String fileName);
+public interface AmazonS3Service {
+    void uploadFile(MultipartFile file) throws IOException;
+
+    byte[] getFileBytes(final String fileName);
 }
