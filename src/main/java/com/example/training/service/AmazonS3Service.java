@@ -7,5 +7,5 @@ import java.io.IOException;
 public interface AmazonS3Service {
     void uploadFile(MultipartFile file) throws IOException;
 
-    byte[] getFileBytes(final String fileName);
+    byte[] getFileBytes(final String fileName) throws IOException;
 }

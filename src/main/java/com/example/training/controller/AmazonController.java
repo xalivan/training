@@ -17,22 +17,26 @@ import java.io.IOException;
 public class AmazonController {
     private final AmazonS3Service amazonS3Service;
 
-    @GetMapping(path = "download/files/{fileName}", produces = MediaType.ALL_VALUE)
+    @GetMapping(path = "files/{fileName}", produces = MediaType.ALL_VALUE)
     public ResponseEntity<byte[]> getObjectS3ByName(@PathVariable String fileName) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(amazonS3Service.getFileBytes(fileName));
+        try {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(amazonS3Service.getFileBytes(fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @PostMapping(path ="upload/files", produces = MediaType.ALL_VALUE)
+    @PostMapping(path ="files", produces = MediaType.ALL_VALUE)
     public ResponseEntity<Void> save(@RequestParam("file") MultipartFile file) {
         try {
             amazonS3Service.uploadFile(file);
             return ResponseEntity.ok().build();
         } catch (IOException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
