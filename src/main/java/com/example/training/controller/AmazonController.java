@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.ws.rs.Produces;
+import java.io.IOException;
 
 
 @RestController
@@ -17,31 +17,23 @@ import javax.ws.rs.Produces;
 public class AmazonController {
     private final AmazonS3Service amazonS3Service;
 
-    @GetMapping("download/files/{fileName}")
-    @Produces(MediaType.ALL_VALUE)
+    @GetMapping(path = "download/files/{fileName}", produces = MediaType.ALL_VALUE)
     public ResponseEntity<byte[]> getObjectS3ByName(@PathVariable String fileName) {
-        byte[] bytes = amazonS3Service.getFileBytes(fileName);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
         return ResponseEntity.ok()
-                .headers(getHttpHeaders(fileName))
-                .body(bytes);
+                .headers(headers)
+                .body(amazonS3Service.getFileBytes(fileName));
     }
 
-    @PostMapping("upload/files")
-    @Produces(MediaType.ALL_VALUE)
+    @PostMapping(path ="upload/files", produces = MediaType.ALL_VALUE)
     public ResponseEntity<Void> save(@RequestParam("file") MultipartFile file) {
         try {
             amazonS3Service.uploadFile(file);
             return ResponseEntity.ok().build();
-        } catch (Exception e) {
+        } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    private HttpHeaders getHttpHeaders(String fileName) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.add("Content-type", "application/octet-stream");
-        headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-        return headers;
     }
 }
