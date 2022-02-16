@@ -26,24 +26,27 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
     }
 
     @Override
-    public void uploadFile(MultipartFile multipartFile) throws IOException {
+    public String uploadFile(MultipartFile multipartFile) throws IOException {
         if (!amazonS3.doesBucketExistV2(bucket)) {
-            log.info("Bucket is not available");
+            log.warn("Bucket is not available");
             amazonS3.createBucket(bucket);
-            log.info(bucket + " created");
+            log.info("Created bucket {}", bucket);
         }
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
-        InputStream inputStream = multipartFile.getInputStream();
-        amazonS3.putObject(new PutObjectRequest(bucket, multipartFile.getOriginalFilename(), inputStream, objectMetadata));
-        inputStream.close();
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            amazonS3.putObject(
+                    new PutObjectRequest(bucket, multipartFile.getOriginalFilename(), inputStream, objectMetadata));
+            return "File \"" + multipartFile.getOriginalFilename() + "\" saved";
+        }
     }
 
     @Override
     public byte[] getFileBytes(String fileName) throws IOException {
-        S3ObjectInputStream objectContent = amazonS3.getObject(bucket, fileName).getObjectContent();
-        byte[] bytes = IOUtils.toByteArray(objectContent);
-        objectContent.close();
+        byte[] bytes;
+        try (S3ObjectInputStream objectContent = amazonS3.getObject(bucket, fileName).getObjectContent()) {
+            bytes = IOUtils.toByteArray(objectContent);
+        }
         return bytes;
     }
 }
