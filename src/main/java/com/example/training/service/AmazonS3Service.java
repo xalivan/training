@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface AmazonS3Service {
-    String uploadFile(MultipartFile file) throws IOException;
+    void uploadFile(MultipartFile file) throws IOException;
 
     byte[] getFileBytes(String fileName) throws IOException;
 
