@@ -1,9 +1,7 @@
 package com.example.training.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +30,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
             amazonS3.createBucket(bucket);
             log.info("Created bucket {}", bucket);
         }
+
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         try (InputStream inputStream = multipartFile.getInputStream()) {
@@ -48,5 +47,16 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
             bytes = IOUtils.toByteArray(objectContent);
         }
         return bytes;
+    }
+
+    @Override
+    public boolean delete(String fileName) {
+        ListObjectsV2Result result = amazonS3.listObjectsV2(bucket);
+        if (result.getObjectSummaries().stream().anyMatch(file -> file.getKey().equals(fileName))) {
+            new DeleteObjectsRequest(bucket).withKeys(fileName);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

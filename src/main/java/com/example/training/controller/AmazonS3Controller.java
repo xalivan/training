@@ -47,4 +47,11 @@ public class AmazonS3Controller {
             return ResponseEntity.badRequest().body("File " + file.getOriginalFilename() + " not saved");
         }
     }
+
+    @DeleteMapping(path = "{fileName}")
+    public ResponseEntity<String> delete(@PathVariable String fileName) {
+        return amazonS3Service.delete(fileName)
+                ? ResponseEntity.ok().body("File \"" + fileName + "\" deleted")
+                : ResponseEntity.badRequest().body("File \"" + fileName + "\" not found");
+    }
 }
