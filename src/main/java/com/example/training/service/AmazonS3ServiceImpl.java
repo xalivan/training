@@ -1,7 +1,10 @@
 package com.example.training.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,8 +47,9 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
             try (S3ObjectInputStream objectContent = amazonS3.getObject(bucket, fileName).getObjectContent()) {
                 return IOUtils.toByteArray(objectContent);
             }
+        } else {
+            throw new FileNotFoundException();
         }
-        throw new FileNotFoundException();
     }
 
     @Override
@@ -54,8 +58,9 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
             amazonS3.deleteObject(deleteObjectRequest);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     private void createBucketIfAbsent() {
