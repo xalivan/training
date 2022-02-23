@@ -21,8 +21,10 @@ import static org.mockito.Mockito.*;
 class AmazonS3ServiceImplTest {
     private static final String BUCKET = "amazon-s3-ap";
     private static final String FILE_NAME = "hello.txt";
-    private static final MultipartFile MULTIPART_FILE = new MockMultipartFile("file", FILE_NAME, MediaType.TEXT_PLAIN_VALUE, "Hello, World!".getBytes());
-    private static final MultipartFile MULTIPART_FILE_NULL = new MockMultipartFile("file", null, null, new byte[0]);
+    private static final MultipartFile MULTIPART_FILE =
+            new MockMultipartFile("file", FILE_NAME, MediaType.TEXT_PLAIN_VALUE, "Hello, World!".getBytes());
+    private static final MultipartFile MULTIPART_FILE_NULL =
+            new MockMultipartFile("file", null, null, new byte[0]);
     private final AmazonS3 client = mock(AmazonS3.class);
     private final AmazonS3Service amazonS3Service = new AmazonS3ServiceImpl(client, BUCKET);
 
@@ -51,7 +53,8 @@ class AmazonS3ServiceImplTest {
         PutObjectRequest putObjectRequest = putObjectRequestCaptor.getValue();
         assertThat(putObjectRequest.getBucketName(), is(BUCKET));
         assertThat(putObjectRequest.getKey(), is(MULTIPART_FILE.getOriginalFilename()));
-        assertThat(putObjectRequest.getInputStream().readAllBytes().length, is(MULTIPART_FILE.getInputStream().readAllBytes().length));
+        assertThat(putObjectRequest.getInputStream().readAllBytes().length,
+                is(MULTIPART_FILE.getInputStream().readAllBytes().length));
         assertThat(putObjectRequest.getMetadata().getContentLength(), is(objectMetadata.getContentLength()));
     }
 
